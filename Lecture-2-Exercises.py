@@ -187,15 +187,6 @@ _retweets = twitter_api.statuses.retweets(id=ID)
 print [r['user']['screen_name'] for r in _retweets]
 
 
-# In[ ]:
-
-
-
-
-# coding: utf-8
-
-# # Exercises
-
 # ## Exercise 3 (Natural Language Processing)
 # 
 
