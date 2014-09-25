@@ -38,8 +38,9 @@ except pymongo.errors.ConnectionFailure:
 db = client["twitter_bot"]
 tweet_collection = db["tweets"]
 followback_users_collection = db["followback_users"]
+home_timeline_collection = db["home_timeline_tweets"]
 
-def get_timeline_tweets(api):
+def get_user_timeline_tweets(api):
     """ retrieve 200 newest tweets from user timeline"""
     tweets = api.statuses.user_timeline(count=200)
     if not tweets:
@@ -47,6 +48,17 @@ def get_timeline_tweets(api):
         sys.exit()
     return tweets
 
+def get_home_timeline_tweets(api, home_timeline_db):
+    """retrieve newest tweets from home timeline"""
+    if home_timeline_db.count():
+        newest_tweet = home_timeline_db.find().skip(home_timeline_db.count() - 1)[0]
+        if newest_tweet:
+            tweets = api.statuses.home_timeline(count=200, since_id = int(newest_tweet["id"]))
+        else:
+            tweets = api.statuses.home_timeline(count=200)
+    else:
+        tweets = api.statuses.home_timeline(count=200)
+    return tweets
 
 def is_new_tweet(tweet_db, tweet):
     """checks if a tweet is new (not in the "tweets" collection """
@@ -65,11 +77,16 @@ def is_current_followback_user(followback_db, user):
     return False
 
 def post_tweet(text, api, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
-    """posts a tweet, if no coordinates are specified, the "home coordinates" are used"""
-    if len(text) < 140:
+    """posts a tweet, if no coordinates are specified, the "home coordinates" are used
+        TODO: allow an image to be uploaded (statuses.update_with_media)
+    """
+    if len(text) <= 140:
         api.statuses.update(status=text, lat=coordinates[0], long=coordinates[1], display_coordinates=display_coord)
     else:
         print("tweet text too long")
+
+def post_retweet(tweet_id, api):
+    api.statuses.retweet(id=tweet_id)
 
 def save_followback_user(followback_db, user):
     """saves user to "followback_users" mongodb collection """
@@ -113,7 +130,7 @@ def follow_followback_users(followback_db, api, number):
 def unfollow_nonreciprocal_followers(followback_db, api):
     """function for unfollowing users that havent followed us back
     after 24 hours, maybe refactor"""
-    one_day_ago = datetime.datetime.now() - datetime.timedelta(days=1)
+    one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
     followback_users = list(followback_db.find())
     result = []
     for i in range(1, math.floor(len(followback_users) / 100) + 1):
@@ -142,10 +159,18 @@ def unfollow_nonreciprocal_followers(followback_db, api):
 
 
 if __name__ == "__main__":
-    timeline_tweets = get_timeline_tweets(twitter_api)
+    timeline_tweets = get_user_timeline_tweets(twitter_api)
     for tweet in timeline_tweets:
         if is_new_tweet(tweet_collection, tweet):
             save_tweet(tweet_collection, tweet)
     
-    follow_followback_users(followback_users_collection, twitter_api, 49)
-    unfollow_nonreciprocal_followers(followback_users_collection, twitter_api)
+    home_timeline_tweets = get_home_timeline_tweets(twitter_api, home_timeline_collection)
+    for tweet in home_timeline_tweets:
+        if is_new_tweet(home_timeline_collection, tweet):
+            save_tweet(home_timeline_collection, tweet)
+
+    popular_tweet = max(home_timeline_tweets, key=lambda t: t["retweet_count"])
+    post_retweet(popular_tweet["id"], twitter_api)
+
+    #follow_followback_users(followback_users_collection, twitter_api, 49)
+    #unfollow_nonreciprocal_followers(followback_users_collection, twitter_api)
