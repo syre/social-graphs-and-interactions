@@ -26,6 +26,9 @@ twitter_api = twitter.Twitter(auth=twitter.OAuth(
 DB_HOSTNAME = config_dict["DB_HOSTNAME"]
 DB_PORT = int(config_dict["DB_PORT"])
 
+HOME_LAT = 41.9479831
+HOME_LNG = -87.8365125
+
 # set up database connection
 try:
     client = pymongo.MongoClient(DB_HOSTNAME, DB_PORT)
@@ -61,7 +64,7 @@ def is_current_followback_user(followback_db, user):
         return True
     return False
 
-def post_tweet(text, api, coordinates=(41.9479831,-87.8365125), display_coord=True):
+def post_tweet(text, api, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
     """posts a tweet, if no coordinates are specified, the "home coordinates" are used"""
     if len(text) < 140:
         api.statuses.update(status=text, lat=coordinates[0], long=coordinates[1], display_coordinates=display_coord)
