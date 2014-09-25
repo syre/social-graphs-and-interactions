@@ -143,6 +143,6 @@ if __name__ == "__main__":
     for tweet in timeline_tweets:
         if is_new_tweet(tweet_collection, tweet):
             save_tweet(tweet_collection, tweet)
-    post_tweet("should i stay in or go out tonight? decisions, decisions", twitter_api)
-    #follow_followback_users(followback_users_collection, twitter_api, 49)
-    #unfollow_nonreciprocal_followers(followback_users_collection, twitter_api)
+    
+    follow_followback_users(followback_users_collection, twitter_api, 49)
+    unfollow_nonreciprocal_followers(followback_users_collection, twitter_api)
