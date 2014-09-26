@@ -6,6 +6,8 @@ import sys
 import datetime
 import dateutil.parser
 import math
+import time
+import random
 
 with open("bot_config.txt","r") as f:
     config = f.readlines()
@@ -40,6 +42,8 @@ tweet_collection = db["tweets"]
 followback_users_collection = db["followback_users"]
 home_timeline_collection = db["home_timeline_tweets"]
 
+random.seed()
+
 def get_user_timeline_tweets(api):
     """ retrieve 200 newest tweets from user timeline"""
     tweets = api.statuses.user_timeline(count=200)
@@ -51,13 +55,12 @@ def get_user_timeline_tweets(api):
 def get_home_timeline_tweets(api, home_timeline_db):
     """retrieve newest tweets from home timeline"""
     if home_timeline_db.count():
-        newest_tweet = home_timeline_db.find().skip(home_timeline_db.count() - 1)[0]
+        sorted_tweets = home_timeline_db.find().sort("id",pymongo.DESCENDING)
+        newest_tweet = sorted_tweets[0]
         if newest_tweet:
-            tweets = api.statuses.home_timeline(count=200, since_id = int(newest_tweet["id"]))
-        else:
-            tweets = api.statuses.home_timeline(count=200)
-    else:
-        tweets = api.statuses.home_timeline(count=200)
+            tweets = api.statuses.home_timeline(count=200, since_id = newest_tweet["id"])
+            return tweets
+    tweets = api.statuses.home_timeline(count=200)
     return tweets
 
 def is_new_tweet(tweet_db, tweet):
@@ -110,9 +113,13 @@ def save_tweet(tweet_db, tweet):
     pprint.pprint("put tweet with id: {} in db".format(tweet["id"]))
 
 
-def follow_followback_users(followback_db, api, number):
+def follow_followback_users(followback_db, api, number, delay_in_seconds=0):
     """ function for following a number of users
-     with "followback" in name/description """
+     with "followback" in name/description
+     keeps going til NUMBER users have been added
+     if delay_in_seconds is specified a random delay
+     is introduced between creating friendships so that
+     specified_delay/2 <= delay <= specified_delay"""
     users = []
     page_num = 0
     user_count = 0
@@ -126,8 +133,11 @@ def follow_followback_users(followback_db, api, number):
     for user in users[:number]:
             api.friendships.create(screen_name=user["screen_name"])
             save_followback_user(followback_db, user)
+            if delay_in_seconds:
+                time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
-def unfollow_nonreciprocal_followers(followback_db, api):
+
+def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
     """function for unfollowing users that havent followed us back
     after 24 hours, maybe refactor"""
     one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
@@ -156,21 +166,6 @@ def unfollow_nonreciprocal_followers(followback_db, api):
                 destroy_result = api.friendships.destroy(screen_name=result_user["screen_name"])
                 if "id" in destroy_result:
                     pprint.pprint("friendship with user with {} was destroyed".format(destroy_result["id"]))
+            if delay_in_seconds:
+                time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
-
-if __name__ == "__main__":
-    timeline_tweets = get_user_timeline_tweets(twitter_api)
-    for tweet in timeline_tweets:
-        if is_new_tweet(tweet_collection, tweet):
-            save_tweet(tweet_collection, tweet)
-    
-    home_timeline_tweets = get_home_timeline_tweets(twitter_api, home_timeline_collection)
-    for tweet in home_timeline_tweets:
-        if is_new_tweet(home_timeline_collection, tweet):
-            save_tweet(home_timeline_collection, tweet)
-
-    popular_tweet = max(home_timeline_tweets, key=lambda t: t["retweet_count"])
-    post_retweet(popular_tweet["id"], twitter_api)
-
-    #follow_followback_users(followback_users_collection, twitter_api, 49)
-    #unfollow_nonreciprocal_followers(followback_users_collection, twitter_api)
