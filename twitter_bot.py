@@ -8,8 +8,8 @@ import dateutil.parser
 import math
 import time
 import random
-
-with open("bot_config.txt","r") as f:
+import os
+with open(os.path.join(os.path.dirname(__file__),"bot_config.txt"),"r") as f:
     config = f.readlines()
 config_dict = dict(line.strip().split("=") for line in config if not line.startswith("#"))
 
