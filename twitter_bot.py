@@ -9,6 +9,9 @@ import math
 import time
 import random
 import os
+from urllib import request
+import base64
+
 with open(os.path.join(os.path.dirname(__file__),"bot_config.txt"),"r") as f:
     config = f.readlines()
 config_dict = dict(line.strip().split("=") for line in config if not line.startswith("#"))
@@ -87,6 +90,11 @@ def post_tweet(text, api, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
         api.statuses.update(status=text, lat=coordinates[0], long=coordinates[1], display_coordinates=display_coord)
     else:
         print("tweet text too long")
+
+def post_picture_tweet(text, api, url, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
+    response = request.urlopen(url)
+    params = {"media[]": response.read(), "status": text, "lat": coordinates[0], "long": coordinates[1], "display_coordinates": display_coord}
+    api.statuses.update_with_media(**params)
 
 def post_retweet(tweet_id, api):
     api.statuses.retweet(id=tweet_id)
@@ -169,3 +177,5 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
             if delay_in_seconds:
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
+if __name__ == '__main__':
+    post_picture_tweet(text="haha, scuba dog!", api=twitter_api, url="http://i.imgur.com/rHDJckq.jpg")
