@@ -8,4 +8,4 @@ import time
 random.seed()
 time.sleep(random.randint(0,60*60*2))
 
-unfollow_nonreciprocal_followers(followback_users_collection, twitter_api, 30)
+unfollow_nonreciprocal_followers(followback_users_collection, twitter_api, 0)
