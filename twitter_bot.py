@@ -9,8 +9,8 @@ import math
 import time
 import random
 import os
-from urllib import request
-import base64
+import urllib
+
 
 with open(os.path.join(os.path.dirname(__file__),"bot_config.txt"),"r") as f:
     config = f.readlines()
@@ -92,8 +92,10 @@ def post_tweet(text, api, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
         print("tweet text too long")
 
 def post_picture_tweet(text, api, url, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
-    response = request.urlopen(url)
-    params = {"media[]": response.read(), "status": text, "lat": coordinates[0], "long": coordinates[1], "display_coordinates": display_coord}
+    extension = url.split(".")[-1]
+    urllib.request.urlretrieve(url,"tmp."+extension)
+    with open("tmp."+extension, "rb") as imagefile:
+        params = {"media[]": imagefile.read(), "status": text,  "lat": str(coordinates[0]), "long": str(coordinates[1]), "display_coordinates": str(display_coord)}
     api.statuses.update_with_media(**params)
 
 def post_retweet(tweet_id, api):
