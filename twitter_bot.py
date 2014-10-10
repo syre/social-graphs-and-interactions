@@ -44,6 +44,7 @@ db = client["twitter_bot"]
 tweet_collection = db["tweets"]
 followback_users_collection = db["followback_users"]
 home_timeline_collection = db["home_timeline_tweets"]
+tweetHashtag =db["tweetHashtag"]
 
 random.seed()
 
@@ -113,16 +114,27 @@ def save_followback_user(followback_db, user):
 
 def save_tweet(tweet_db, tweet):
     """saves tweet to "tweets" mongodb collection"""
-    tweet = {"text": tweet["text"],
+    tweetSave = {"text": tweet["text"],
              "coordinates": tweet["coordinates"],
              "retweet_count": tweet["retweet_count"],
              "id": tweet["id"],
              "created_at": tweet["created_at"],
              "user_id": tweet["user"]["id"]}
-    tweet_db.insert(tweet)
+    tweet_db.insert(tweetSave)
     pprint.pprint("put tweet with id: {} in db".format(tweet["id"]))
 
 
+def save_hashtag_tweet(tweetHashtag_db, tweet):
+    """saves tweet with hashtag- an other info to "tweetHashtag" mongodb collection"""
+    tweetSave = {"tweet": tweet,
+             "numberOfHashtag": len(tweet["hashtags"]),
+             "numberOfWords": len(tweet["text"].split(" "),
+             "number_urls": len(tweet["urls"]),
+             "account_created_at": tweet["user"]["created_at"],
+             "user_followers": tweet["user"]["followers_count"]}
+	tweetHashtag_db.insert(tweetSave)
+	pprint.pprint("put tweet with tweet-hashtag with tweet-id: {} in db".format(tweet["id"]))
+	
 def follow_followback_users(followback_db, api, number, delay_in_seconds=0):
     """ function for following a number of users
      with "followback" in name/description
@@ -179,5 +191,6 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
             if delay_in_seconds:
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
+def find_hastags_tweets(api, hashtag, numberOfTweets			
 if __name__ == '__main__':
-    post_picture_tweet(text="haha, scuba dog!", api=twitter_api, url="http://i.imgur.com/rHDJckq.jpg")
+    #post_picture_tweet(text="haha, scuba dog!", api=twitter_api, url="http://i.imgur.com/rHDJckq.jpg")
