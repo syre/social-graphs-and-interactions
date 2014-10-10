@@ -193,4 +193,8 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
 
 def find_hastags_tweets(api, hashtag, numberOfTweets			
 if __name__ == '__main__':
+<<<<<<< HEAD
     #post_picture_tweet(text="haha, scuba dog!", api=twitter_api, url="http://i.imgur.com/rHDJckq.jpg")
+=======
+    post_tweet("less than a week left, let's go Bulls! :) #chicagobulls #bulls #wizards",twitter_api)
+>>>>>>> b709d857c93003123f40a9c60ab04091f49a2421
