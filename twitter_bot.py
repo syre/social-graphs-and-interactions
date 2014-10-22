@@ -180,4 +180,4 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
 if __name__ == '__main__':
-    post_picture_tweet("Man, this dog looks so unreal and funny at the same time :D #funny #Dogs", twitter_api, "http://i.imgur.com/9nBhdpV.jpg")
+    post_picture_tweet("Banana corgi for Woof Wednesday! #woofwednesday", twitter_api, "http://img.izismile.com/img/img4/20111029/640/the_only_cute_corgi_halloween_costume_post_640_10.jpg")
