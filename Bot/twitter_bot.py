@@ -48,23 +48,23 @@ human_users_collection = db["real_users"]
 
 random.seed()
 
-def get_user_timeline_tweets(api):
+def get_user_timeline_tweets():
     """ retrieve 200 newest tweets from user timeline"""
-    tweets = api.statuses.user_timeline(count=200)
+    tweets = twitter_api.statuses.user_timeline(count=200)
     if not tweets:
         print("failed to fetch statuses")
         sys.exit()
     return tweets
 
-def get_home_timeline_tweets(api, home_timeline_db):
+def get_home_timeline_tweets():
     """retrieve newest tweets from home timeline"""
-    if home_timeline_db.count():
-        sorted_tweets = home_timeline_db.find().sort("id",pymongo.DESCENDING)
+    if home_timeline_collection.count():
+        sorted_tweets = home_timeline_collection.find().sort("id",pymongo.DESCENDING)
         newest_tweet = sorted_tweets[0]
         if newest_tweet:
-            tweets = api.statuses.home_timeline(count=200, since_id = newest_tweet["id"])
+            tweets = twitter_api.statuses.home_timeline(count=200, since_id = newest_tweet["id"])
             return tweets
-    tweets = api.statuses.home_timeline(count=200)
+    tweets = twitter_api.statuses.home_timeline(count=200)
     return tweets
 
 def is_new_tweet(tweet_db, tweet):
@@ -148,7 +148,7 @@ def save_tweet(tweet_db, tweet):
     pprint.pprint("put tweet with id: {} in db".format(tweet["id"]))
 
 
-def follow_followback_users(followback_db, api, number, delay_in_seconds=0):
+def follow_followback_users(number, delay_in_seconds=0):
     """ function for following a number of users
      with "followback" in name/description
      keeps going til NUMBER users have been added
@@ -159,15 +159,15 @@ def follow_followback_users(followback_db, api, number, delay_in_seconds=0):
     page_num = 0
     user_count = 0
     while(user_count < number):
-        user_page = api.users.search(q="followback", count=20, page=page_num)
-        filtered = [u for u in user_page if not is_current_followback_user(followback_db, u)]
+        user_page = twitter_api.users.search(q="followback", count=20, page=page_num)
+        filtered = [u for u in user_page if not is_current_followback_user(u)]
         users.extend(filtered)
         user_count += len(filtered)
         page_num += 1
 
     for user in users[:number]:
-            api.friendships.create(screen_name=user["screen_name"])
-            save_followback_user(followback_db, user)
+            twitter_api.friendships.create(screen_name=user["screen_name"])
+            save_followback_user(user)
             if delay_in_seconds:
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
