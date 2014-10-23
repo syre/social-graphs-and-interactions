@@ -44,6 +44,7 @@ db = client["twitter_bot"]
 tweet_collection = db["tweets"]
 followback_users_collection = db["followback_users"]
 home_timeline_collection = db["home_timeline_tweets"]
+human_users_collection = db["real_users"]
 
 random.seed()
 
@@ -75,19 +76,30 @@ def is_new_tweet(tweet_db, tweet):
     return True
 
 
-def is_current_followback_user(followback_db, user):
+def is_current_followback_user(user):
     """checks if a user is in the "followback_users" collection"""
-    result = followback_db.find_one({"id": user["id"]})
+    result = followback_users_collection.find_one({"id": user["id"]})
     if result:
         return True
     return False
+
+def is_current_human_user(user):
+  """checks if a user is in the "human_users" collection"""
+  result = human_users_collection.find_one({"id": user["id"]})
+  if result:
+    return True
+  return False
 
 def post_tweet(text, api, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
     """posts a tweet, if no coordinates are specified, the "home coordinates" are used
         TODO: allow an image to be uploaded (statuses.update_with_media)
     """
     if len(text) <= 140:
-        api.statuses.update(status=text, lat=coordinates[0], long=coordinates[1], display_coordinates=display_coord)
+        # if we reduce latitude any further we're gonna end up in the bay
+        # therefore 0-0.02
+        latitude=coordinates[0]+random.uniform(0,0.02)
+        longitude = coordinates[1]+random.uniform(-0.02,0.02)
+        api.statuses.update(status=text, lat=latitude, long=longitude, display_coordinates=display_coord)
     else:
         print("tweet text too long")
 
@@ -95,20 +107,33 @@ def post_picture_tweet(text, api, url, coordinates=(HOME_LAT, HOME_LNG), display
     extension = url.split(".")[-1]
     urllib.request.urlretrieve(url,"tmp."+extension)
     with open("tmp."+extension, "rb") as imagefile:
-        params = {"media[]": imagefile.read(), "status": text,  "lat": str(coordinates[0]), "long": str(coordinates[1]), "display_coordinates": str(display_coord)}
+        # if we reduce latitude any further we're gonna end up in the bay
+        # therefore 0-0.02
+        latitude=coordinates[0]+random.uniform(0,0.02)
+        longitude = coordinates[1]+random.uniform(-0.02,0.02)
+        params = {"media[]": imagefile.read(), "status": text,  "lat": str(latitude), "long": str(longitude), "display_coordinates": str(display_coord)}
     api.statuses.update_with_media(**params)
 
-def post_retweet(tweet_id, api):
-    api.statuses.retweet(id=tweet_id)
+def post_retweet(tweet_id):
+    twitter_api.statuses.retweet(id=tweet_id)
 
-def save_followback_user(followback_db, user):
+def save_followback_user(user):
     """saves user to "followback_users" mongodb collection """
     user = {"id": user["id"],
             "screen_name": user["screen_name"],
             "save_date": datetime.datetime.now().isoformat()}
-    followback_db.insert(user)
+    followback_users_collection.insert(user)
     pprint.pprint("put user with id: {} in db".format(user["id"]))
 
+def save_human_user(user):
+  user_profile = twitter_api.users.show(user_id=user["id"])
+  if ("id" in user_profile):
+    save_dict = {"save_date": datetime.datetime.now().isoformat()}
+    user_profile.update(save_dict)
+    human_users_collection.insert(user_profile)
+    pprint.pprint("put user with id: {} in human db".format(user_profile["id"]))
+  else:
+    pprint.pprint("could not fetch user with id: {0} for human db".format(user["id"]))
 
 
 def save_tweet(tweet_db, tweet):
@@ -146,6 +171,31 @@ def follow_followback_users(followback_db, api, number, delay_in_seconds=0):
             if delay_in_seconds:
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
+def follow_human_users(number, delay_in_seconds=0):
+  """
+  Function for following human users (right now based in San Francisco)
+  keeps going til NUMBER users have been added
+  if delay_in_seconds is specified a random delay
+  is introduced between creating friendships so that
+  specified_delay/2 <= delay <= specified_delay
+  """
+  users = []
+  page_num = 0
+  user_count = 0
+  while (user_count < number):
+    user_page = twitter_api.users.search(q="San Francisco", count=20, page=page_num)
+    # makes sure user is not already in databases
+    filtered = [u for u in user_page if (not is_current_human_user(u)) or (not is_current_followback_user(u))]
+    # makes sure user is in san fran
+    filtered = [u for u in filtered if u["location"] == "San Francisco, CA"]
+    users.extend(filtered)
+    user_count += len(filtered)
+    page_num += 1
+  for user in users[:number]:
+          twitter_api.friendships.create(screen_name=user["screen_name"])
+          save_human_user(user)
+          if delay_in_seconds:
+              time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
 def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
     """function for unfollowing users that havent followed us back
@@ -180,4 +230,4 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
 if __name__ == '__main__':
-    post_tweet("Hello San Francisco! Glad to be here! #CityByTheBay #SanFran #FogCity",twitter_api)
+    follow_human_users(10)
