@@ -31,8 +31,8 @@ twitter_api = twitter.Twitter(auth=twitter.OAuth(
 DB_HOSTNAME = config_dict["DB_HOSTNAME"]
 DB_PORT = int(config_dict["DB_PORT"])
 
-HOME_LAT = 41.9479831
-HOME_LNG = -87.8365125
+HOME_LAT = 37.772105
+HOME_LNG = -122.388089
 
 # set up database connection
 try:
@@ -180,4 +180,4 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
 if __name__ == '__main__':
-    post_picture_tweet("Banana corgi for Woof Wednesday! #woofwednesday", twitter_api, "http://img.izismile.com/img/img4/20111029/640/the_only_cute_corgi_halloween_costume_post_640_10.jpg")
+    post_tweet("Hello San Francisco! Glad to be here! #CityByTheBay #SanFran #FogCity",twitter_api)
