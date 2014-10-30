@@ -10,7 +10,8 @@ import time
 import random
 import os
 import urllib
-
+import bs4
+import requests
 
 with open(os.path.join(os.path.dirname(__file__),"bot_config.txt"),"r") as f:
     config = f.readlines()
@@ -240,5 +241,41 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
             if delay_in_seconds:
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
+def set_profile_background_image(url):
+    extension = url.split(".")[-1]
+    urllib.request.urlretrieve(url,"tmp_background_image."+extension)
+    with open("tmp_background_image."+extension, "rb") as imagefile:
+        img = imagefile.read()
+        params = {"banner": img}
+    resp = twitter_api.account.update_profile_banner(**params)
+
+def find_profile_background_images():
+    topics = ["horses", "maldives", "animals", "san francisco monuments", "chicago bulls games"]
+    random_topic = random.choice(topics)
+    image_urls = []
+    for i in range(0,4):
+        image_search_url = "https://ajax.googleapis.com/ajax/services/search/images"
+        params = {"v": "1.0", "q": random_topic, "imgsz": "xlarge", "start": i}
+        r = requests.get(image_search_url, params=params)
+        for result in r.json()["responseData"]["results"]:
+            image_urls.append(result["url"])
+
+    return image_urls
+
+def find_new_events():
+    url = "http://www.sfweekly.com/sanfrancisco/EventSearch"
+    r = requests.get(url)
+    soup = bs4.BeautifulSoup(r.text)
+    event_list = []
+    for group in soup.find_all("div", {"class": "results_cont"}):
+        group_dict = {"date": group.find("div", {"class": "groupHeader"}).text.strip()}
+        group_dict["events"] = []
+        for event in group.find_all("div", {"class": "event item"}):
+            group_dict["events"].append({"name": event.find("span", {"class": "event-title"}).text, "place": event.find("div", {"class": "location"}).a.string})
+        event_list.append(group_dict)
+    return event_list
+
+
 if __name__ == '__main__':
-    follow_human_users(10)
+    events = find_new_events()
+    print(events[1]["events"])

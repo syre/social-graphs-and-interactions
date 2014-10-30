@@ -13,4 +13,4 @@ for tweet in home_timeline_tweets:
         save_tweet(home_timeline_collection, tweet)
 
 popular_tweet = max(home_timeline_tweets, key=lambda t: t["retweet_count"])
-post_retweet(popular_tweet["id"], twitter_api)
+post_retweet(popular_tweet["id"])
