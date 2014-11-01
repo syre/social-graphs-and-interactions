@@ -85,16 +85,16 @@ def is_new_tweet(tweet_db, tweet):
     return True
 
 
-def is_current_followback_user(user):
+def is_current_followback_user(id):
     """checks if a user is in the "followback_users" collection"""
-    result = followback_users_collection.find_one({"id": user["id"]})
+    result = followback_users_collection.find_one({"id": id})
     if result:
         return True
     return False
 
-def is_current_human_user(user):
+def is_current_human_user(id):
   """checks if a user is in the "human_users" collection"""
-  result = human_users_collection.find_one({"id": user["id"]})
+  result = human_users_collection.find_one({"id": id})
   if result:
     return True
   return False
@@ -134,15 +134,15 @@ def save_followback_user(user):
     followback_users_collection.insert(user)
     pprint.pprint("put user with id: {} in db".format(user["id"]))
 
-def save_human_user(user):
-  user_profile = twitter_api.users.show(user_id=user["id"])
+def save_human_user(id):
+  user_profile = twitter_api.users.show(user_id=id)
   if ("id" in user_profile):
     save_dict = {"save_date": datetime.datetime.now().isoformat()}
     user_profile.update(save_dict)
     human_users_collection.insert(user_profile)
     pprint.pprint("put user with id: {} in human db".format(user_profile["id"]))
   else:
-    pprint.pprint("could not fetch user with id: {0} for human db".format(user["id"]))
+    pprint.pprint("could not fetch user with id: {0} for human db".format(id))
 
 
 def save_tweet(tweet_db, tweet):
@@ -169,7 +169,7 @@ def follow_followback_users(number, delay_in_seconds=0):
     user_count = 0
     while(user_count < number):
         user_page = twitter_api.users.search(q="followback", count=20, page=page_num)
-        filtered = [u for u in user_page if not is_current_followback_user(u)]
+        filtered = [u for u in user_page if not is_current_followback_user(u["id"])]
         users.extend(filtered)
         user_count += len(filtered)
         page_num += 1
@@ -194,7 +194,7 @@ def follow_human_users(number, delay_in_seconds=0):
   while (user_count < number):
     user_page = twitter_api.users.search(q="San Francisco", count=20, page=page_num)
     # makes sure user is not already in databases
-    filtered = [u for u in user_page if (not is_current_human_user(u)) or (not is_current_followback_user(u))]
+    filtered = [u for u in user_page if (not is_current_human_user(u["id"])) or (not is_current_followback_user(u["id"]))]
     # makes sure user is in san fran
     filtered = [u for u in filtered if u["location"] == "San Francisco, CA"]
     users.extend(filtered)
@@ -202,7 +202,7 @@ def follow_human_users(number, delay_in_seconds=0):
     page_num += 1
   for user in users[:number]:
           twitter_api.friendships.create(screen_name=user["screen_name"])
-          save_human_user(user)
+          save_human_user(user["id"])
           if delay_in_seconds:
               time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
@@ -272,12 +272,19 @@ def find_new_events():
         event_list.append(group_dict)
     return event_list
 
+def follow_humans_from_list(number, delay_in_seconds=0):
+    url = "http://ec2-54-77-226-94.eu-west-1.compute.amazonaws.com/static/targets"
+    id_list = requests.get(url).text
+    id_list = id_list.split("\n")
+    id_list = [int(x.strip()) for x in id_list if x]
+    new_ids = [id for id in id_list if not is_current_human_user(id) and not is_current_followback_user(id)]
+    if (new_ids):
+        for id in new_ids[:number]:
+            twitter_api.friendships.create(user_id=id)
+            save_human_user(id)
+            if delay_in_seconds:
+                time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
+
 
 if __name__ == '__main__':
-    #events = find_new_events()
-    #print(events[1]["events"])
-    print(type(tweet_collection.find()))
-    tweets = recommendation_tweets_collection.find({'$exist':{"tweeted_at"}})
-    print(tweets)
-    for tweet in tweets:
-        print(tweet)
+    follow_humans_from_list(10)

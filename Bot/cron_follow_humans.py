@@ -6,4 +6,8 @@ import time
 random.seed()
 time.sleep(random.randint(0,60*15))
 
-follow_human_users(25, 30)
+follow_human_users(10, 30)
+
+time.sleep(random.randint(0,60*15))
+
+follow_humans_from_list(10, 30)
