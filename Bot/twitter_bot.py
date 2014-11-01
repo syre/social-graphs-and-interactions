@@ -285,6 +285,27 @@ def follow_humans_from_list(number, delay_in_seconds=0):
             if delay_in_seconds:
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
+def follow_reciprocal_humans_from_list(number, delay_in_seconds=0):
+    url = "http://ec2-54-77-226-94.eu-west-1.compute.amazonaws.com/static/targets"
+    id_list = requests.get(url).text
+    id_list = id_list.split("\n")
+    id_list = [int(x.strip()) for x in id_list if x]
+    random_id = random.choice(id_list)
+    # get users that the random human is following
+    human_following_user_ids = set(twitter_api.friends.ids(user_id=random_id, count=5000)["ids"])
+    # get users that are following the random human
+    following_human_user_ids = set(twitter_api.followers.ids(user_id=random_id, count=5000)["ids"])
+
+    reciprocal = human_following_user_ids & following_human_user_ids
+    # filter on already in human and followback db
+    reciprocal = {id for id in reciprocal if not is_current_human_user(id) and not is_current_followback_user(id)}
+    if reciprocal:
+        for id in random.sample(reciprocal, number):
+            twitter_api.friendships.create(user_id=id)
+            save_human_user(id)
+            if delay_in_seconds:
+                time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
+
 
 if __name__ == '__main__':
-    follow_humans_from_list(10)
+    follow_reciprocal_humans_from_list(10)
