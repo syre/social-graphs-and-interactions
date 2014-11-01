@@ -274,5 +274,10 @@ def find_new_events():
 
 
 if __name__ == '__main__':
-    events = find_new_events()
-    print(events[1]["events"])
+    #events = find_new_events()
+    #print(events[1]["events"])
+    print(type(tweet_collection.find()))
+    tweets = recommendation_tweets_collection.find({'$exist':{"tweeted_at"}})
+    print(tweets)
+    for tweet in tweets:
+        print(tweet)
