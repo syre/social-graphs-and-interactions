@@ -14,4 +14,4 @@ follow_humans_from_list(10, 30)
 
 time.sleep(random.randint(0,60*15))
 
-follow_reciprocal_humans_from_list(10)
+follow_reciprocal_humans_from_list(10, 30)
