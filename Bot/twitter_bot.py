@@ -67,13 +67,20 @@ def get_user_timeline_tweets():
 
 def get_home_timeline_tweets():
     """retrieve newest tweets from home timeline"""
-    if home_timeline_collection.count():
-        sorted_tweets = home_timeline_collection.find().sort("id",pymongo.DESCENDING)
-        newest_tweet = sorted_tweets[0]
-        if newest_tweet:
-            tweets = twitter_api.statuses.home_timeline(count=200, since_id = newest_tweet["id"])
-            return tweets
-    tweets = twitter_api.statuses.home_timeline(count=200)
+    sorted_tweets = home_timeline_collection.find().sort("id",pymongo.DESCENDING)
+    max_id = sorted_tweets[0]["id"]
+
+    # gets first 200 tweets
+    tweets = twitter_api.statuses.home_timeline(count=200, since_id = max_id)
+    min_id = min(tweets, key=lambda x: x["id"])["id"]
+    max_id = max(tweets, key=lambda x: x["id"])["id"]
+    # gets 600 more
+    for i in range(3):
+        next_tweets = twitter_api.statuses.home_timeline(count=200, max_id=min_id, since_id = max_id)
+        if next_tweets:
+            tweets.extend(next_tweets)
+            max_id = max(next_tweets, key=lambda x: x["id"])["id"]
+            min_id = min(next_tweets, key=lambda x: x["id"])["id"]
     return tweets
 
 def is_new_tweet(tweet_db, tweet):
@@ -147,13 +154,14 @@ def save_human_user(id):
 
 def save_tweet(tweet_db, tweet):
     """saves tweet to "tweets" mongodb collection"""
-    tweet = {"text": tweet["text"],
+    inserting_tweet = {"text": tweet["text"],
              "coordinates": tweet["coordinates"],
              "retweet_count": tweet["retweet_count"],
              "id": tweet["id"],
-             "created_at": tweet["created_at"],
              "user_id": tweet["user"]["id"]}
-    tweet_db.insert(tweet)
+    dt = datetime.strptime(tweet["created_at"], '%a %b %d %H:%M:%S +0000 %Y')
+    inserting_tweet["created_at"] = dt
+    tweet_db.insert(inserting_tweet)
     pprint.pprint("put tweet with id: {} in db".format(tweet["id"]))
 
 
@@ -306,6 +314,15 @@ def follow_reciprocal_humans_from_list(number, delay_in_seconds=0):
             if delay_in_seconds:
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
+def find_best_retweet():
+    hashtags = ["horses", "Horses", "Bulls", "Coldplay", "Travelling", "Foodie", "Animals", "ChicagoBulls"]
+    tweets = []
+    for hashtag in hashtags:
+        res = home_timeline_collection.find({"text": {"$regex": ".*#"+hashtag+".*"}})
+        for i in res:
+            print(i)
+    print(home_timeline_collection.count())
 
 if __name__ == '__main__':
-    follow_reciprocal_humans_from_list(10)
+    for i in home_timeline_collection.find():
+        print(i)
