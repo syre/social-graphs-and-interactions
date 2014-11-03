@@ -224,7 +224,7 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
         result.extend(api.friendships.lookup(screen_name=",".join(
             [user["screen_name"] for user in followback_users[(i * 100) - 100:100 * i]])))
         # sleep due to Twitter API restrictions
-        time.sleep(60)
+        time.sleep(90)
     last = followback_users[(math.floor(len(followback_users) % 100) * 100):len(followback_users)]
     result.extend(api.friendships.lookup(
         screen_name=",".join([user["screen_name"] for user in last])))
