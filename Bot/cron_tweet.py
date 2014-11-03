@@ -2,7 +2,7 @@
 import random
 from twitter_bot import *
 import time
-"""cron_follow should start at  8:30 CDT (Chicago time) + random delay (30m)
+"""cron_follow should start at 15:00 san fransisco time + random delay (30m)
    in the cron tab"""
 
 

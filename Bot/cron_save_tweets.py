@@ -2,7 +2,7 @@
 from twitter_bot import *
 import random
 import time
-"""post_popular_retweet should start at 20:00 CDT (Chicago time) + random delay (2h)
+"""post_popular_retweet should start for each 8 hour + random delay (2h)
    in the cron tab"""
 random.seed()
 time.sleep(random.randint(0,60*60*2))
