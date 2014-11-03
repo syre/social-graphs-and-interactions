@@ -50,11 +50,13 @@ recommendation_tweets_collection = db["recommendation_tweets"]
 personal_tweets_collection = db["personal_tweets"]
 random.seed()
 
+
 def save_own_current_tweets(tweet_db, tweet, flag=0):
     """saves a history over "used" tweets to a mongodb collection"""
     tweetSave = {"text": tweet, "tweeted_at": datetime.datetime.now().isoformat(), "response":flag}
     tweet_db.insert(tweetSave)
     #pprint.pprint("put tweet with text: {} in db: {}".format(tweet["id"], tweet_db))
+
 
 
 
@@ -68,13 +70,20 @@ def get_user_timeline_tweets():
 
 def get_home_timeline_tweets():
     """retrieve newest tweets from home timeline"""
-    if home_timeline_collection.count():
-        sorted_tweets = home_timeline_collection.find().sort("id",pymongo.DESCENDING)
-        newest_tweet = sorted_tweets[0]
-        if newest_tweet:
-            tweets = twitter_api.statuses.home_timeline(count=200, since_id = newest_tweet["id"])
-            return tweets
-    tweets = twitter_api.statuses.home_timeline(count=200)
+    sorted_tweets = home_timeline_collection.find().sort("id",pymongo.DESCENDING)
+    max_id = sorted_tweets[0]["id"]
+
+    # gets first 200 tweets
+    tweets = twitter_api.statuses.home_timeline(count=200, since_id = max_id)
+    min_id = min(tweets, key=lambda x: x["id"])["id"]
+    max_id = max(tweets, key=lambda x: x["id"])["id"]
+    # gets 600 more
+    for i in range(3):
+        next_tweets = twitter_api.statuses.home_timeline(count=200, max_id=min_id, since_id = max_id)
+        if next_tweets:
+            tweets.extend(next_tweets)
+            max_id = max(next_tweets, key=lambda x: x["id"])["id"]
+            min_id = min(next_tweets, key=lambda x: x["id"])["id"]
     return tweets
 
 def is_new_tweet(tweet_db, tweet):
@@ -86,16 +95,16 @@ def is_new_tweet(tweet_db, tweet):
     return True
 
 
-def is_current_followback_user(user):
+def is_current_followback_user(id):
     """checks if a user is in the "followback_users" collection"""
-    result = followback_users_collection.find_one({"id": user["id"]})
+    result = followback_users_collection.find_one({"id": id})
     if result:
         return True
     return False
 
-def is_current_human_user(user):
+def is_current_human_user(id):
   """checks if a user is in the "human_users" collection"""
-  result = human_users_collection.find_one({"id": user["id"]})
+  result = human_users_collection.find_one({"id": id})
   if result:
     return True
   return False
@@ -129,32 +138,33 @@ def post_retweet(tweet_id):
 
 def save_followback_user(user):
     """saves user to "followback_users" mongodb collection """
-    user = {"id": user["id"],
+    user = {"id": user["id_str"],
             "screen_name": user["screen_name"],
             "save_date": datetime.datetime.now().isoformat()}
     followback_users_collection.insert(user)
     pprint.pprint("put user with id: {} in db".format(user["id"]))
 
-def save_human_user(user):
-  user_profile = twitter_api.users.show(user_id=user["id"])
-  if ("id" in user_profile):
+def save_human_user(id):
+  user_profile = twitter_api.users.show(user_id=id)
+  if ("id_str" in user_profile):
     save_dict = {"save_date": datetime.datetime.now().isoformat()}
     user_profile.update(save_dict)
     human_users_collection.insert(user_profile)
     pprint.pprint("put user with id: {} in human db".format(user_profile["id"]))
   else:
-    pprint.pprint("could not fetch user with id: {0} for human db".format(user["id"]))
+    pprint.pprint("could not fetch user with id: {0} for human db".format(id))
 
 
 def save_tweet(tweet_db, tweet):
     """saves tweet to "tweets" mongodb collection"""
-    tweet = {"text": tweet["text"],
+    inserting_tweet = {"text": tweet["text"],
              "coordinates": tweet["coordinates"],
              "retweet_count": tweet["retweet_count"],
-             "id": tweet["id"],
-             "created_at": tweet["created_at"],
-             "user_id": tweet["user"]["id"]}
-    tweet_db.insert(tweet)
+             "id": tweet["id_str"],
+             "user_id": tweet["user"]["id_str"]}
+    dt = datetime.datetime.strptime(tweet["created_at"], '%a %b %d %H:%M:%S +0000 %Y')
+    inserting_tweet["created_at"] = dt
+    tweet_db.insert(inserting_tweet)
     pprint.pprint("put tweet with id: {} in db".format(tweet["id"]))
 
 
@@ -170,7 +180,7 @@ def follow_followback_users(number, delay_in_seconds=0):
     user_count = 0
     while(user_count < number):
         user_page = twitter_api.users.search(q="followback", count=20, page=page_num)
-        filtered = [u for u in user_page if not is_current_followback_user(u)]
+        filtered = [u for u in user_page if not is_current_followback_user(u["id_str"])]
         users.extend(filtered)
         user_count += len(filtered)
         page_num += 1
@@ -195,7 +205,7 @@ def follow_human_users(number, delay_in_seconds=0):
   while (user_count < number):
     user_page = twitter_api.users.search(q="San Francisco", count=20, page=page_num)
     # makes sure user is not already in databases
-    filtered = [u for u in user_page if (not is_current_human_user(u)) or (not is_current_followback_user(u))]
+    filtered = [u for u in user_page if (not is_current_human_user(u["id_str"])) or (not is_current_followback_user(u["id_str"]))]
     # makes sure user is in san fran
     filtered = [u for u in filtered if u["location"] == "San Francisco, CA"]
     users.extend(filtered)
@@ -203,7 +213,7 @@ def follow_human_users(number, delay_in_seconds=0):
     page_num += 1
   for user in users[:number]:
           twitter_api.friendships.create(screen_name=user["screen_name"])
-          save_human_user(user)
+          save_human_user(user["id_str"])
           if delay_in_seconds:
               time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
@@ -216,6 +226,8 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
     for i in range(1, math.floor(len(followback_users) / 100) + 1):
         result.extend(api.friendships.lookup(screen_name=",".join(
             [user["screen_name"] for user in followback_users[(i * 100) - 100:100 * i]])))
+        # sleep due to Twitter API restrictions
+        time.sleep(90)
     last = followback_users[(math.floor(len(followback_users) % 100) * 100):len(followback_users)]
     result.extend(api.friendships.lookup(
         screen_name=",".join([user["screen_name"] for user in last])))
@@ -273,7 +285,48 @@ def find_new_events():
         event_list.append(group_dict)
     return event_list
 
+def follow_humans_from_list(number, delay_in_seconds=0):
+    url = "http://ec2-54-77-226-94.eu-west-1.compute.amazonaws.com/static/targets"
+    id_list = requests.get(url).text
+    id_list = id_list.split("\n")
+    id_list = [int(x.strip()) for x in id_list if x]
+    new_ids = [id for id in id_list if not is_current_human_user(id) and not is_current_followback_user(id)]
+    if (new_ids):
+        for id in new_ids[:number]:
+            twitter_api.friendships.create(user_id=id)
+            save_human_user(id)
+            if delay_in_seconds:
+                time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
+
+def follow_reciprocal_humans_from_list(number, delay_in_seconds=0):
+    url = "http://ec2-54-77-226-94.eu-west-1.compute.amazonaws.com/static/targets"
+    id_list = requests.get(url).text
+    id_list = id_list.split("\n")
+    id_list = [int(x.strip()) for x in id_list if x]
+    random_id = random.choice(id_list)
+    # get users that the random human is following
+    human_following_user_ids = set(twitter_api.friends.ids(user_id=random_id, count=5000)["ids"])
+    # get users that are following the random human
+    following_human_user_ids = set(twitter_api.followers.ids(user_id=random_id, count=5000)["ids"])
+
+    reciprocal = human_following_user_ids & following_human_user_ids
+    # filter on already in human and followback db
+    reciprocal = {id for id in reciprocal if not is_current_human_user(id) and not is_current_followback_user(id)}
+    if reciprocal:
+        for id in random.sample(reciprocal, number):
+            twitter_api.friendships.create(user_id=id)
+            save_human_user(id)
+            if delay_in_seconds:
+                time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
+
+def find_best_retweet():
+    hashtags = ["horses", "Horses", "Bulls", "Coldplay", "Travelling", "Foodie", "Animals", "ChicagoBulls"]
+    tweets = []
+    for hashtag in hashtags:
+        res = home_timeline_collection.find({"text": {"$regex": ".*#"+hashtag+".*"}})
+        for i in res:
+            print(i)
+    print(home_timeline_collection.count())
 
 if __name__ == '__main__':
-    events = find_new_events()
-    print(events[1]["events"])
+    print(followback_users_collection.count())

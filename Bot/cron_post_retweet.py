@@ -6,11 +6,8 @@ import time
    in the cron tab"""
 random.seed()
 time.sleep(random.randint(0,60*60*2))
-
-home_timeline_tweets = get_home_timeline_tweets()
-for tweet in home_timeline_tweets:
-    if is_new_tweet(home_timeline_collection, tweet):
-        save_tweet(home_timeline_collection, tweet)
-
+one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+home_timeline_tweets = home_timeline_collection.find({"created_at" : {"$gt": one_day_ago}})
 popular_tweet = max(home_timeline_tweets, key=lambda t: t["retweet_count"])
+
 post_retweet(popular_tweet["id"])

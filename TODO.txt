@@ -1,0 +1,11 @@
+T1 - extra text for T1 (SØREN & ANDERS)
+T1 - Follow humans from the list (IMPLEMENTATION) (SØREN) DONE
+T1 - Follow reciprocal followers to humans (IMPLEMENTATION) (SØREN) DONE
+T1 - custom tweets (ANDERS)
+T1 - retweet based on more than retweets (NEXT TIME)
+
+N1 - add text (ANDERS)
+
+N2 - add created twitter graph (SØREN) DONE
+
+N3 - all of N3 (SØREN) DONE
