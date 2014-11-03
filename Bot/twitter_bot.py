@@ -223,6 +223,8 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
     for i in range(1, math.floor(len(followback_users) / 100) + 1):
         result.extend(api.friendships.lookup(screen_name=",".join(
             [user["screen_name"] for user in followback_users[(i * 100) - 100:100 * i]])))
+        # sleep due to Twitter API restrictions
+        time.sleep(60)
     last = followback_users[(math.floor(len(followback_users) % 100) * 100):len(followback_users)]
     result.extend(api.friendships.lookup(
         screen_name=",".join([user["screen_name"] for user in last])))
@@ -324,4 +326,4 @@ def find_best_retweet():
     print(home_timeline_collection.count())
 
 if __name__ == '__main__':
-    pass
+    print(followback_users_collection.count())
