@@ -109,18 +109,18 @@ def is_current_human_user(id):
     return True
   return False
 
-#def post_tweet(text, api, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
-#    """posts a tweet, if no coordinates are specified, the "home coordinates" are used
-#        TODO: allow an image to be uploaded (statuses.update_with_media)
-#    """
-#    if len(text) <= 140:
-#        # if we reduce latitude any further we're gonna end up in the bay
-#        # therefore 0-0.02
-#        latitude=coordinates[0]+random.uniform(0,0.02)
-#        longitude = coordinates[1]+random.uniform(-0.02,0.02)
-#        api.statuses.update(status=text, lat=latitude, long=longitude, display_coordinates=display_coord)
-#    else:
-#        print("tweet text too long")
+def post_tweet(text, api, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
+    """posts a tweet, if no coordinates are specified, the "home coordinates" are used
+        TODO: allow an image to be uploaded (statuses.update_with_media)
+    """
+    if len(text) <= 140:
+        # if we reduce latitude any further we're gonna end up in the bay
+        # therefore 0-0.02
+        latitude=coordinates[0]+random.uniform(0,0.02)
+        longitude = coordinates[1]+random.uniform(-0.02,0.02)
+        api.statuses.update(status=text, lat=latitude, long=longitude, display_coordinates=display_coord)
+    else:
+        print("tweet text too long")
 
 def post_picture_tweet(text, api, url, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
     extension = url.split(".")[-1]
