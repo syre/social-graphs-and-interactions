@@ -357,19 +357,20 @@ def find_best_retweet():
         X[i] = extract_attributes_from_tweet(tweet)
     y = X[:,5]
     X = X[:,:5]
-
     bayes = sklearn.naive_bayes.MultinomialNB()
-    logreg = sklearn.linear_model.LogisticRegression()
-    bayes.fit(X[:math.floor(len(X)/2)],y[:math.floor(len(y)/2)])
-    logreg.fit(X[:math.floor(len(X)/2)],y[:math.floor(len(y)/2)])
+    bayes.fit(X,y)
 
-    b_score = bayes.score(X[math.floor(len(X)/2):],y[math.floor(len(y)/2):])
-    logreg_score = logreg.score(X[math.floor(len(X)/2):],y[math.floor(len(y)/2):])
-    return (b_score, logreg_score)
-
-
-
-
+    one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+    best_tweet = ""
+    prob = 0
+    home_timeline_tweets = home_timeline_collection.find({"created_at" : {"$gt": one_day_ago}})
+    for tweet in home_timeline_tweets:
+        # get the tweet without the good attribute
+        pred = bayes.predict(extract_attributes_from_tweet(tweet)[:5])
+        if pred > prob:
+            best_tweet = tweet
+            prob = pred
+    return tweet
 
 if __name__ == '__main__':
     print(find_best_retweet())
