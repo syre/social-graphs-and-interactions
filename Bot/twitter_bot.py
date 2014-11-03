@@ -12,6 +12,10 @@ import os
 import urllib
 import bs4
 import requests
+import numpy as np
+import nltk.tokenize.punkt
+import sklearn.naive_bayes
+import sklearn.linear_model
 
 with open(os.path.join(os.path.dirname(__file__),"bot_config.txt"),"r") as f:
     config = f.readlines()
@@ -158,7 +162,10 @@ def save_tweet(tweet_db, tweet):
              "coordinates": tweet["coordinates"],
              "retweet_count": tweet["retweet_count"],
              "id": tweet["id_str"],
-             "user_id": tweet["user"]["id_str"]}
+             "user_id": tweet["user"]["id_str"],
+             "user": {"followers_count": tweet["user"]["followers_count"], "created_at": tweet["user"]["created_at"]},
+             "entities": tweet["entities"]
+             }
     dt = datetime.datetime.strptime(tweet["created_at"], '%a %b %d %H:%M:%S +0000 %Y')
     inserting_tweet["created_at"] = dt
     tweet_db.insert(inserting_tweet)
@@ -317,13 +324,49 @@ def follow_reciprocal_humans_from_list(number, delay_in_seconds=0):
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
 def find_best_retweet():
-    hashtags = ["horses", "Horses", "Bulls", "Coldplay", "Travelling", "Foodie", "Animals", "ChicagoBulls"]
+    hashtags = ["Horses", "Bulls", "Coldplay", "Travelling", "Foodie", "Animals", "ChicagoBulls", "Indie", "Maldives", "Dogs"]
+    one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
     tweets = []
+
+    def extract_attributes_from_tweet(tweet):
+        """extract attributes from tweet closure"""
+        followers = tweet["user"]["followers_count"]
+        num_words = len(nltk.tokenize.punkt.PunktWordTokenizer().tokenize(tweet["text"]))
+
+        dt = datetime.datetime.strptime(tweet["user"]["created_at"], '%a %b %d %H:%M:%S +0000 %Y')
+        age = (datetime.datetime.now()-dt).total_seconds()
+
+        hashtags_len = len(tweet["entities"]["hashtags"])
+        urls_len = len(tweet["entities"]["urls"])
+        if (tweet["retweet_count"] >= 10):
+            good = 1
+        else:
+            good = 0
+        return np.array([followers, num_words, age, hashtags_len, urls_len, good])
+
     for hashtag in hashtags:
-        res = home_timeline_collection.find({"text": {"$regex": ".*#"+hashtag+".*"}})
-        for i in res:
-            print(i)
-    print(home_timeline_collection.count())
+        r = twitter_api.search.tweets(q="#"+hashtag, count=100, until=str(one_day_ago.date()))["statuses"]
+        tweets.extend(r)
+    attribute_names = ["number of followers", "age of user", "number of links", "number of words", "number of hashtags"]
+    class_names = ["Good", "Bad"]
+    X = np.empty((len(tweets), 6))
+    for i, tweet in enumerate(tweets):
+        X[i] = extract_attributes_from_tweet(tweet)
+    y = X[:,5]
+    X = X[:,:5]
+
+    bayes = sklearn.naive_bayes.MultinomialNB()
+    logreg = sklearn.linear_model.LogisticRegression()
+    bayes.fit(X[:math.floor(len(X)/2)],y[:math.floor(len(y)/2)])
+    logreg.fit(X[:math.floor(len(X)/2)],y[:math.floor(len(y)/2)])
+
+    b_score = bayes.score(X[math.floor(len(X)/2):],y[math.floor(len(y)/2):])
+    logreg_score = logreg.score(X[math.floor(len(X)/2):],y[math.floor(len(y)/2):])
+    return (b_score, logreg_score)
+
+
+
+
 
 if __name__ == '__main__':
-    print(followback_users_collection.count())
+    print(find_best_retweet())
