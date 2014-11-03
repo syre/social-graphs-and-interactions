@@ -50,16 +50,14 @@ recommendation_tweets_collection = db["recommendation_tweets"]
 personal_tweets_collection = db["personal_tweets"]
 random.seed()
 
-def save_own_current_tweets(tweet_db, tweet):
-	"""saves a history over "used" tweets to a mongodb collection"""
-    tweet = {"text": tweet["text"]
-             "tweeted_at": datetime.datetime.now().isoformat()}
-    tweet_db.insert(tweet)
-    pprint.pprint("put tweet with text: {} in db: {}".format(tweet["id"], tweet_db))
-	
+def save_own_current_tweets(tweet_db, tweet, flag=0):
+    """saves a history over "used" tweets to a mongodb collection"""
+    tweetSave = {"text": tweet, "tweeted_at": datetime.datetime.now().isoformat(), "response":flag}
+    tweet_db.insert(tweetSave)
+    #pprint.pprint("put tweet with text: {} in db: {}".format(tweet["id"], tweet_db))
 
 
-	
+
 def get_user_timeline_tweets():
     """ retrieve 200 newest tweets from user timeline"""
     tweets = twitter_api.statuses.user_timeline(count=200)
@@ -102,18 +100,18 @@ def is_current_human_user(user):
     return True
   return False
 
-def post_tweet(text, api, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
-    """posts a tweet, if no coordinates are specified, the "home coordinates" are used
-        TODO: allow an image to be uploaded (statuses.update_with_media)
-    """
-    if len(text) <= 140:
-        # if we reduce latitude any further we're gonna end up in the bay
-        # therefore 0-0.02
-        latitude=coordinates[0]+random.uniform(0,0.02)
-        longitude = coordinates[1]+random.uniform(-0.02,0.02)
-        api.statuses.update(status=text, lat=latitude, long=longitude, display_coordinates=display_coord)
-    else:
-        print("tweet text too long")
+#def post_tweet(text, api, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
+#    """posts a tweet, if no coordinates are specified, the "home coordinates" are used
+#        TODO: allow an image to be uploaded (statuses.update_with_media)
+#    """
+#    if len(text) <= 140:
+#        # if we reduce latitude any further we're gonna end up in the bay
+#        # therefore 0-0.02
+#        latitude=coordinates[0]+random.uniform(0,0.02)
+#        longitude = coordinates[1]+random.uniform(-0.02,0.02)
+#        api.statuses.update(status=text, lat=latitude, long=longitude, display_coordinates=display_coord)
+#    else:
+#        print("tweet text too long")
 
 def post_picture_tweet(text, api, url, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
     extension = url.split(".")[-1]
