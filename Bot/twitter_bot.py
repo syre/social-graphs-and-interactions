@@ -54,11 +54,14 @@ recommendation_tweets_collection = db["recommendation_tweets"]
 personal_tweets_collection = db["personal_tweets"]
 random.seed()
 
-def save_own_current_tweets(tweet_db, tweet):
+
+def save_own_current_tweets(tweet_db, tweet, flag=0):
     """saves a history over "used" tweets to a mongodb collection"""
-    tweet = {"text": tweet["text"], "tweeted_at": datetime.datetime.now().isoformat()}
-    tweet_db.insert(tweet)
-    pprint.pprint("put tweet with text: {} in db: {}".format(tweet["id"], tweet_db))
+    tweetSave = {"text": tweet, "tweeted_at": datetime.datetime.now().isoformat(), "response":flag}
+    tweet_db.insert(tweetSave)
+    #pprint.pprint("put tweet with text: {} in db: {}".format(tweet["id"], tweet_db))
+
+
 
 
 def get_user_timeline_tweets():

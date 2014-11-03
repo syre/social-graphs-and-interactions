@@ -2,7 +2,7 @@
 from twitter_bot import *
 import random
 import time
-"""cron_change_background should start every 3 days in the cron tab"""
+"""cron_change_background should start every 3 days in the cron tab at 6:00 san fransisco time + 15 min. delay"""
 
 random.seed()
 time.sleep(random.randint(0,60*15))

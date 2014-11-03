@@ -3,7 +3,7 @@ from twitter_bot import *
 import random
 import time
 
-"""cron_unfollow should start at 20:00 CDT (Chicago time) / 13:00 CEST (Danish time)  + random delay (2h)
+"""cron_unfollow should start at 6:00 san fransisco time + random delay (2h)
    in the cron tab"""
 random.seed()
 #time.sleep(random.randint(0,60*60*2))
