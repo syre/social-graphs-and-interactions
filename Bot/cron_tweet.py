@@ -153,6 +153,6 @@ def recommendation():
 random.seed()
 time.sleep(random.randint(0,60*30))
 
-func_list = [recommendation] #personal
+func_list = [personal,recommendation] #personal
 func = random.choice(func_list)
 func()
