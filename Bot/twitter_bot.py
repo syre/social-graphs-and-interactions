@@ -327,6 +327,8 @@ def follow_reciprocal_humans_from_list(number, delay_in_seconds=0):
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
 
 def find_best_retweet():
+    """Pulls in 100 tweets from 10 categories (1000 tweets)
+    rates it according to """
     hashtags = ["Horses", "Bulls", "Coldplay", "Travelling", "Foodie", "Animals", "ChicagoBulls", "Indie", "Maldives", "Dogs"]
     one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
     tweets = []
@@ -360,7 +362,7 @@ def find_best_retweet():
     bayes = sklearn.naive_bayes.MultinomialNB()
     bayes.fit(X,y)
 
-    one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+    one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(hours=18)
     best_tweet = ""
     prob = 0
     home_timeline_tweets = home_timeline_collection.find({"created_at" : {"$gt": one_day_ago}})
