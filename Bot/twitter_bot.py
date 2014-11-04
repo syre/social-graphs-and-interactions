@@ -292,6 +292,9 @@ def find_new_events():
         event_list.append(group_dict)
     return event_list
 
+def find_new_songs():
+    url = "http://www.billboard.com/charts/hot-100"
+
 def follow_humans_from_list(number, delay_in_seconds=0):
     url = "http://ec2-54-77-226-94.eu-west-1.compute.amazonaws.com/static/targets"
     id_list = requests.get(url).text
