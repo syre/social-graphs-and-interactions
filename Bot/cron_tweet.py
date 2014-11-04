@@ -116,7 +116,7 @@ def recommendation():
                 if resp[1] != "!NOT!":
                     response = "I'm going to " + resp[1].rstrip()+" " +resp[0]
                     print ("response: " + response)
-                #post_tweet(response, twitter_api)
+                post_tweet(response, twitter_api)
                 recommendation_tweets_collection.update({"text":tweet['text'], "tweeted_at":tweet["tweeted_at"]}, {'$set':{'response':1}}) #has been answered! removing it
                 """Chosed to tweet a recommendation tweet. Saw that there was a recommendation in the db.
                 Generate a "respond" and has been postet and saved in the db"""
@@ -137,14 +137,14 @@ def recommendation():
             string = chooseRecomText(strings)
             tweet_text = "Can anyone recommend "+string[0]+"?"
             print (tweet_text)
-            #post_tweet(tweet_text, twitter_api)
+            post_tweet(tweet_text, twitter_api)
             save_own_current_tweets(recommendation_tweets_collection, tweet_text)
         else:
             print ("Recommendation: no result from db")
             string = chooseRecomText(strings)
             tweet_text = "Can anyone recommend "+string[0]+"?"
             print (tweet_text)
-            #post_tweet(tweet_text, twitter_api)
+            post_tweet(tweet_text, twitter_api)
             save_own_current_tweets(recommendation_tweets_collection, tweet_text)
             """Chosed to tweet a recommendation tweet. There was NO recommendation tweets in the db.\n
                 Chosed a tweet from recommendation.txt and it has been postet and saved in the db"""
