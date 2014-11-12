@@ -243,8 +243,14 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
             if "none" in result_user["connections"]:
                 pprint.pprint("no relationship whatsoever with user with id: {}".format(result_user["id"]))
                 continue
-            db_user = followback_db.find_one({"id": result_user["id"]})
+            
+            db_user = followback_db.find_one({"id": result_user["id_str"]})
+
+            if not db_user:
+                pprint.pprint("user with id: {} is not in database".format(result_user["id"]))
+                continue
             followed_date = dateutil.parser.parse(db_user["save_date"])
+
             if "followed_by" in result_user["connections"]:
                 pprint.pprint("user with id {} is following us".format(result_user["id"]))
             elif followed_date > one_day_ago:
