@@ -421,7 +421,7 @@ def intervention_favorite(hashtag):
     tweets = twitter_api.search.tweets(q=hashtag, count=100)
     for tweet in tweets["statuses"]:
         try:
-            twitter_api.favorites.create(id=tweet["id"])
+            twitter_api.favorites.create(id=tweet["id_str"])
         except (twitter.api.TwitterHTTPError,urllib.error.HTTPError) as e:
             print(e)
             continue
