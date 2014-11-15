@@ -243,7 +243,7 @@ def unfollow_nonreciprocal_followers(followback_db, api, delay_in_seconds=0):
             if "none" in result_user["connections"]:
                 pprint.pprint("no relationship whatsoever with user with id: {}".format(result_user["id"]))
                 continue
-            
+
             db_user = followback_db.find_one({"id": result_user["id_str"]})
 
             if not db_user:
@@ -380,5 +380,52 @@ def find_best_retweet():
             prob = pred
     return tweet
 
+def intervention_retweet(hashtag):
+    # goddamn that unparseable url
+    bot_screennames = ["2787613616", "matsie_at_dtu", "hybrishybris",
+                        "AndrenatorC", "CPH_Startup", "Lakerolls", "FitVeganGirl_",
+                        "RichardsIndie", "TheRexyGuy", "AxelCyrilian", "Where_is_JB_now",
+                        "Pralesworth", "henrikholm89", "zakflanigan", "RealAndersDuck",
+                        "AlyciaGerald", "jsmth_t", "hirihiker", "SirZenji", "meetjamesmet",
+                        "madpopo79", "cj_hitower", "THINKDEEPYO", "JackBoHorseMan",
+                        "Timmy_abroad", "Shtinoehh", "ioapsy", "SuperRexy", "SimonWJorgensen",
+                        "clintcrock", "zoesprings", "marcussor", "neergdave", "AnnasHollywood",
+                        "sonia_manning", "canuckWong", "sapiezynski", "ericfullhammer", "ethanwoods88"]
+
+    tweets = twitter_api.search.tweets(q=hashtag, count=100)
+
+    for tweet in tweets["statuses"][:10]:
+        try:
+            post_retweet(tweet["id"])
+        except (twitter.api.TwitterHTTPError, urllib.error.HTTPError):
+            print("sharing not allowed for that tweet")
+            continue
+
+    tweets = tweets["statuses"][10:]
+    retweet_count = 0
+    while(retweet_count < 50):
+        for tweet in tweets:
+            if tweet["user"]["screen_name"] not in bot_screennames:
+                try:
+                    post_retweet(tweet["id"])
+                except (twitter.api.TwitterHTTPError, urllib.error.HTTPError):
+                    print("sharing not allowed for that tweet")
+                    continue
+                retweet_count += 1
+                time.sleep(random.randint(60,120))
+        max_id = max(tweets, key=lambda x: x["id"])["id"]
+        min_id = min(tweets, key=lambda x: x["id"])["id"]
+        tweets = twitter_api.search.tweets(q=hashtag, count=100, since_id=max_id, max_id=min_id)["statuses"]
+
+def intervention_favorite(hashtag):
+    tweets = twitter_api.search.tweets(q=hashtag, count=100)
+    for tweet in tweets["statuses"]:
+        try:
+            twitter_api.favorites.create(id=tweet["id"])
+        except (twitter.api.TwitterHTTPError,urllib.error.HTTPError) as e:
+            print(e)
+            continue
+
+
 if __name__ == '__main__':
-    print(find_best_retweet())
+    intervention_favorite("#getyourflushot")
