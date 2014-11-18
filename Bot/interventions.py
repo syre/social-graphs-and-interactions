@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 __author__ = 'Anders'
 from twitter_bot import *
 from datetime import date
@@ -6,7 +7,7 @@ import random
 import time
 from PIL import Image
 
-day = date(2014, 11, 17)#date.today()
+day = date.today()
 
 
 def add_image(tweetText):
