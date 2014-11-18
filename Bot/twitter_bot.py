@@ -137,6 +137,17 @@ def post_picture_tweet(text, api, url, coordinates=(HOME_LAT, HOME_LNG), display
         params = {"media[]": imagefile.read(), "status": text,  "lat": str(latitude), "long": str(longitude), "display_coordinates": str(display_coord)}
     api.statuses.update_with_media(**params)
 
+
+def post_local_picture_tweet(text, api, picture, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
+
+    with open(os.path.join(os.path.dirname(__file__), picture), "rb") as image_file:
+        latitude=coordinates[0]+random.uniform(0,0.02)
+        longitude = coordinates[1]+random.uniform(-0.02,0.02)
+        params = {"media[]": image_file.read(), "status": text,  "lat": str(latitude), "long": str(longitude), "display_coordinates": str(display_coord)}
+
+    api.statuses.update_with_media(**params)
+
+
 def post_retweet(tweet_id):
     twitter_api.statuses.retweet(id=tweet_id)
 
