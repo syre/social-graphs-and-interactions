@@ -405,16 +405,16 @@ def intervention_retweet(hashtag):
 
     tweets = twitter_api.search.tweets(q=hashtag, count=100)
 
-    for tweet in tweets["statuses"][:10]:
+    for tweet in tweets["statuses"][:4]:
         try:
             post_retweet(tweet["id"])
         except (twitter.api.TwitterHTTPError, urllib.error.HTTPError):
             print("sharing not allowed for that tweet")
             continue
 
-    tweets = tweets["statuses"][10:]
+    tweets = tweets["statuses"][4:]
     retweet_count = 0
-    while(retweet_count < 50):
+    while(retweet_count < 15):
         for tweet in tweets:
             if tweet["user"]["screen_name"] not in bot_screennames:
                 try:
@@ -423,7 +423,7 @@ def intervention_retweet(hashtag):
                     print("sharing not allowed for that tweet")
                     continue
                 retweet_count += 1
-                time.sleep(random.randint(60,120))
+                time.sleep(random.randint(30,60))
         max_id = max(tweets, key=lambda x: x["id"])["id"]
         min_id = min(tweets, key=lambda x: x["id"])["id"]
         tweets = twitter_api.search.tweets(q=hashtag, count=100, since_id=max_id, max_id=min_id)["statuses"]
