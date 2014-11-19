@@ -231,6 +231,7 @@ def follow_human_users(number, delay_in_seconds=0):
     page_num += 1
   for user in users[:number]:
           twitter_api.friendships.create(screen_name=user["screen_name"])
+          pprint.pprint("creating friendship with user: {}".format(user["id_str"]))
           save_human_user(user["id_str"])
           if delay_in_seconds:
               time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
@@ -318,6 +319,7 @@ def follow_humans_from_list(number, delay_in_seconds=0):
     if (new_ids):
         for id in new_ids[:number]:
             twitter_api.friendships.create(user_id=id)
+            pprint.pprint("creating friendship with user: {}".format(id))
             save_human_user(id)
             if delay_in_seconds:
                 time.sleep(random.randint(int(delay_in_seconds)/2,delay_in_seconds))
