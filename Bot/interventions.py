@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 __author__ = 'Anders'
 from twitter_bot import *
 from datetime import date
@@ -6,7 +7,7 @@ import random
 import time
 from PIL import Image
 
-day = date(2014, 11, 17)#date.today()
+day = date.today()
 
 
 def add_image(tweetText):
@@ -43,7 +44,7 @@ def post(tweet0, tweet1, image0, image1):
     else:
         post_tweet(tweet1, twitter_api)
 
-    time.sleep(random.randint(0, 60*60*5)) #Max kl. 4
+    time.sleep(random.randint(60*60*2, 60*60*5)) #Max kl. 4
     time.sleep(random.randint(0, 60*60*5)) #Max kl. 9
     if image1 != "":
         post_local_picture_tweet(tweet1, twitter_api, image1)
