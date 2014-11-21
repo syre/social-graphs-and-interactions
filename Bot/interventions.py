@@ -17,7 +17,7 @@ def add_image(tweetText):
     return strings, image
 
 def load_interventions():
-    with open(os.path.join(os.path.dirname(__file__), "interventions_dates_tweets_01.txt"), "r") as f:
+    with open(os.path.join(os.path.dirname(__file__), "interventions_dates_tweets.txt"), "r") as f:
         interventions = f.readlines()
     dateDict = {}
     for lines in interventions:
@@ -38,7 +38,7 @@ def load_interventions():
 def post(tweet0, tweet1, image0, image1):
     print("Should tweet theese:\n{0}\n{1}".format(tweet0, tweet1))
     random.seed()
-    time.sleep(random.randint(0, 60*60*5)) #Max kl. 23
+    #time.sleep(random.randint(0, 60*60*5)) #Max kl. 23
 
     if image0 != "":
         post_local_picture_tweet(tweet0, twitter_api, image0)
