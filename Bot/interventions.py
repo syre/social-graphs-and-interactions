@@ -36,20 +36,21 @@ def load_interventions():
 
 
 def post(tweet0, tweet1, image0, image1):
+    print("Should tweet theese:\n{0}\n{1}".format(tweet0, tweet1))
     random.seed()
-    time.sleep(random.randint(0, 60*60*5)) #Max kl. 23
+    #time.sleep(random.randint(0, 60*60*5)) #Max kl. 23
 
     if image0 != "":
         post_local_picture_tweet(tweet0, twitter_api, image0)
     else:
-        post_tweet(tweet1, twitter_api)
+        post_tweet(tweet0, twitter_api)
 
     time.sleep(random.randint(60*60*2, 60*60*5)) #Max kl. 4
     time.sleep(random.randint(0, 60*60*5)) #Max kl. 9
     if image1 != "":
         post_local_picture_tweet(tweet1, twitter_api, image1)
     else:
-        post_tweet(tweet2, twitter_api)
+        post_tweet(tweet1, twitter_api)
 
 
 dateDict = load_interventions()
