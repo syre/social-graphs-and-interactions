@@ -13,7 +13,7 @@ import urllib
 import bs4
 import requests
 import numpy as np
-import nltk.tokenize.punkt
+#import nltk.tokenize.punkt
 import sklearn.naive_bayes
 import sklearn.linear_model
 
@@ -441,4 +441,4 @@ def intervention_favorite(hashtag):
 
 
 if __name__ == '__main__':
-    intervention_favorite("#getyourflushot")
+    post_tweet("Bulls vs Kings, let's go Kingslayers! #NBA #ChicagoBulls #Bulls", twitter_api)
