@@ -1,0 +1,118 @@
+\documentclass[10pt]{IEEEtran}
+\pdfoutput=1
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage[table]{xcolor}
+\usepackage{pdfpages}
+
+\hypersetup{colorlinks=true,citecolor=[rgb]{0,0.4,0}}
+
+
+\title{Analysis of the susceptibility of Twitter users}
+\author{Søren Howe Gersager, Anders Lønberg Rahbek}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report is the result of the final project in DTU course 02805: Social Graph and Interactions. The course subject was analyzing social networks using Twitter bots and the relation and interaction between bot and human. \\
+This final project tries to look into what makes a human subsceptible to follow a Twitter bot.
+\end{abstract}
+
+\section{Introduction}
+The purpose of DTU course 02805: Social Graph and Interactions is to make the students familiar with social networks and use network theory, natural language processing, datamining and machine learning to analyze these networks. All of the students were given the task of creating a Twitter bot with the purpose of "infiltrating" Twitter and gain followers. To gain followers the bot should try to imitate being a human user. As the followers and "Twitter presence" of the bot grew, it was used to try to influence the people of San Francisco through interventions. Interventions are created by letting all the bots tweet, retweet and favorite using a predetermined hashtag and in this way generate interactions from Twitter users. For the course, we created the bot JackBoHorseMan\cite{twitterprofile}, a 30-something male from Chicago, who loves animals, indie music, travelling and the Bulls.
+
+\section{Implementation}
+\subsection{Circadian Rhythm}
+By using the job-scheduler cron we were able to make the bot interact with Twitter in a simulated circadian rhythm between 8:00 to 22:00 PST (San Francisco Timezone), with a random delay of 0 to 15 minutes included. This was done to make the bot appear more human.
+The implementations in the next subsections all operate only in the circadian rhythm specified here.
+
+\subsection{Tweeting}
+The bot tweeted using two principles:
+\begin{itemize}
+\item Personal tweets: we created a list of predetermined tweets that the bot could select tweets from, communicating every-day situations as working late or waiting for the weekend or being tired on a monday that human users might relate or respond to.
+\item Event tweets: The bot scraped the website of San Francisco Weekly and collected upcoming events like concerts, book readings, plays and tweeted about them in a fitting context randomly chosen from a list of fitting nouns and adjectives like "attending", "going to" and "rocking", "chill".
+\end{itemize}
+\subsection{Reciprocal Following}
+Once a day we followed new twitter users based on two principles:
+\begin{itemize}
+\item Followback query: we performed a search for new users using a query on "followback", and followed them hoping they would follow us back. This principle was to artificially boost the number of followers and followed of the bot and thus look more attractive from a social point of view to potential human users.
+\item Human query: we performed a search for new users based in San Francisco and followed them, the followers generated this way creates data for the later analysis of subsceptibility.\\
+ If the users we followed didn't follow us back within 24 hours, we unfollowed them to make sure the ratio of followers to followed was kept as low as possible as a high ratio might arouse suspicion.
+\end{itemize}
+\subsection{Retweeting}
+Once a day we retweeted content twice based on two different principles:
+\begin{itemize}
+\item Popularity: simply the most popular tweet based on number of retweets the bot had seen within the last 24 hours.
+\item "Goodness": We trained a Naive Bayes classifier to be able to predict "good" tweets where the "goodness" criteria was that the tweet had 10 or more retweets. We used the following attributes: number of followers of the twitter account, age of the twitter account, number of links in the tweet, number of words in the tweet, and number of hashtags in the tweet. We divided the tweets into two data sets and used 2-fold cross validation on them. By doing this we could predict which tweets had the potential to be "good" retweeted tweets.
+\end{itemize}
+
+\subsection{Twitter Profile Variation}
+The bot updated the Twitter profile every third day with a new profile banner based on a Google Image search, finding 50 on topics: horses, animals, indie, maldives, chicago bulls, san francisco monuments. This was done to make the bot appear more human as well as to pique the interest of potential followers.
+
+\section{Interventions}
+In the last part of the course, the whole class should make interventions through their bots. The intervention should hype some predifined hashtags through two personal tweets per day every Mondays, Wednesdays and Fridays plus thanksgiving. \\
+Out strategy was to have the bot do it total autonomously so we didn't have to intervene. \\
+
+We wrote all the personal tweets and their hashtags in a semicolon seperated text-file where the specified date was the first element - then the two tweets. Our bot could then read the file, make a dict with the dates as keys and the two tweets as values. \\
+
+We had a window where we should tweet those two tweets - between 6pm and 9am danish time. To make some randomness to the time where the posts of the tweets would occur, we made a couple of random sleeps. One before the first tweet and two between the first and second tweet. \\
+Two cron jobs ensured that the bot did every Mondays, Wednesdays and Fridays plus thanksgiving.
+
+\section{Susceptibility analysis}
+Age of twitter account, number of followers, number of followed, number of tweets, average links of tweets, number and type of hashtags, tweets in comparison to retweets.
+\\
+NLP:
+sentiment analysis, one group more positive or negative?
+difference in readability measure
+\\
+Machine learning:
+Training a classifier with above attributes: (naive bayes, logistic regression, decision tree)
+\\
+Networks:
+In-out degree
+clustering coefficient
+average path length
+degree distribution
+which group follow the most high-profile users (100k followers or more).
+
+\subsection{Statistics}
+
+\subsection{Theory}
+
+\section{Conclusion}
+
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{lyngby}
+\begin{thebibliography}{9}
+
+\bibitem{twitterprofile}
+\url{twitter.com/JackBoHorseMan}
+\textit{JackBoHorseMan Twitter Profile}
+
+\end{thebibliography}
+
+\clearpage
+\onecolumn
+\appendices
+\section{Code listings}
+
+\definecolor{darkgreen}{rgb}{0, 0.4, 0}
+\lstset{language=Python,
+  numbers=left,
+  frame=bottomline,
+  basicstyle=\scriptsize,
+  identifierstyle=\color{blue},
+  keywordstyle=\bfseries,
+  commentstyle=\color{darkgreen},
+  stringstyle=\color{red},
+  literate={Ö}{{\"O}}1 {é}{{\'e}}1 {Å}{{\AA}}1,
+}
+\lstlistoflistings
+
+\end{document}
