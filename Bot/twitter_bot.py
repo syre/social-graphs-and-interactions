@@ -52,6 +52,8 @@ home_timeline_collection = db["home_timeline_tweets"]
 human_users_collection = db["real_users"]
 recommendation_tweets_collection = db["recommendation_tweets"]
 personal_tweets_collection = db["personal_tweets"]
+non_rec_tweets_collection = db["non_reciprocal_user_tweets"]
+rec_tweets_collection = db["reciprocal_user_tweets"]
 random.seed()
 
 
