@@ -63,7 +63,11 @@ We had a window where we should tweet those two tweets - between 6pm and 9am dan
 Two cron jobs ensured that the bot did every Mondays, Wednesdays and Fridays plus thanksgiving.
 
 \section{Susceptibility analysis}
-Age of twitter account, number of followers, number of followed, number of tweets, average links of tweets, number and type of hashtags, tweets in comparison to retweets.
+\subsection{User groups}
+The foundation of our analysis consists of two groups: the susceptible and non-susceptible twitter users. The susceptible users group consists of 488 users, 487 of which allowed us to see their information and tweets. The non-susceptible users group consists of 1186 users, 1183 of which allowed us to see their information and tweets.
+
+For performing analysis on tweets, 26 users from the non-susceptible group did not have any tweets, which shrunk the group down to 1160 when analysing tweets. Just one of the users in the susceptible group dit not have any tweets, which gives us a group size of 487 tweets.
+We will analyze the following: Age of twitter account, number of followers, number of followed, number of tweets, average links of tweets, number of hashtags, tweets in comparison to retweets.
 \\
 NLP:
 sentiment analysis, one group more positive or negative?
@@ -80,7 +84,21 @@ degree distribution
 which group follow the most high-profile users (100k followers or more).
 
 \subsection{Statistics}
+In comparing the data between the two groups, we will use a Welch t-test to test the null hypothesis that they have equal means or the alternative hypothesis that there is a difference in means of the two groups.
 
+\begin{table}[h]
+\begin{tabular}{lllll}
+\hline
+Metric & Reciprocal & Non-reciprocal & t-value & p-value \\ \hline
+Age & 1204.629 & 1456.636 & 4.952e-10 & 6.290 \\
+Friends & 9638.393 & 10919.615 & -0.445 & 0.649 \\
+Followers & 13369.934 & 61028.298 & -1.107 & 0.268 \\
+Hashtags & 531.755 & 422.087 & -3.329 & 0.0009 \\
+Statuses & 10627.834 & 11073.442 & 0.707 & -0.374 \\ \hline
+\end{tabular}
+\end{table}
+
+The table above shows the mean of each metric, the hashtags metric are hashtags used for a maximum of 1000 tweets, the statuses metric counts both tweets and retweets.
 \subsection{Theory}
 
 \section{Conclusion}
