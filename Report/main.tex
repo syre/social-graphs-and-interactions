@@ -84,35 +84,56 @@ degree distribution
 which group follow the most high-profile users (100k followers or more).
 
 \subsection{Statistics}
-In comparing the data between the two groups, we will use a Welch t-test to test the null hypothesis that they have equal means or the alternative hypothesis that there is a difference in means of the two groups. We assume the populations to be normal-distributed with unequal variance.
+In comparing the data between the two groups, we will use a Welch t-test to test the null hypothesis that they have equal means or the alternative hypothesis that there is a difference in means of the two groups.
 
 \begin{table}[h]
 \begin{tabular}{lllll}
 \hline
-Metric & Susceptible & Non-susceptible & t-value & p-value \\ \hline
-Age & 1204.629 & 1456.636 & 6.290 & 4.952e-10 \\
+Metric & Reciprocal & Non-reciprocal & t-value & p-value \\ \hline
+Age & 1204.629 & 1456.636 & 4.952e-10 & 6.290 \\
 Friends & 9638.393 & 10919.615 & -0.445 & 0.649 \\
 Followers & 13369.934 & 61028.298 & -1.107 & 0.268 \\
 Hashtags & 531.755 & 422.087 & -3.329 & 0.0009 \\
-Statuses & 10627.834 & 11073.442 & -0.374 & 0.707 \\
-Urls & 314.632 & 318.695 & 0.246 & 0.805
+Statuses & 10627.834 & 11073.442 & 0.707 & -0.374 \\ \hline
 \end{tabular}
-\caption{The table above shows the mean of each metric for the susceptible users and non-susceptible users, the hashtags metric are hashtags used for a maximum of 1000 tweets, the age of account is specified in days.
-\subsection{Theory}}
 \end{table}
-We choose a treshold of 5\% (0.05).
-We find that for the age of account and the number of hashtags, the null hypothesis can be rejected with our threshold, and thus the alternative hypothesis must be accepted that the means are significantly different from each other.\\\\
-\begin{figure}
-	\caption{boxplot of hashtags}
-	\centering
-	\includegraphics[scale=0.5]{"figures/total_hashtags_boxplot"}
-\end{figure}
 
-\begin{figure}
-	\caption{boxplot of age of accounts}
-	\centering
-	\includegraphics[scale=0.5]{"figures/age_of_account_boxplot"}
-\end{figure}
+The table above shows the mean of each metric, the hashtags metric are hashtags used for a maximum of 1000 tweets, the statuses metric counts both tweets and retweets.
+
+\subsection{Network}
+\subsection{Sentiment analysis}
+We wanted to see if one of the groups was more positive than the other. We used machine learning, by building a classifier based on a corpus. The classifier was based on a simple Naive Bayes and the corpus was based on 13333 positive and negative tweets (26666 tweets total). \\
+As both of the groups was relative large, we only classified up to the first 50 tweets per user. Some of the users haven't 50 tweet, so we just classified all tweets. 
+Table \ref{sentimentKeyNumbers} show the ratios of the analysis. 
+
+\begin{table}[h]
+\begin{tabular}{lll}
+\hline
+                       & Susceptible & Non-susceptible \\ \hline
+No. of users           & 487         & Et tal her!!!   \\
+No. of tweets          & 23785       & Et tal her!!!   \\
+No. of positive tweets & 14870       & Et tal her!!!   \\
+No. of negative tweets & 8915        & Et tal her!!!   \\ \hline
+\end{tabular}
+\caption{Ratios of the sentiment analysis}
+\label{tab:sentimentKeyNumbers}
+\end{table}
+
+Every of the classified tweets for each user, got either a 0 (negative) or 1 (positive). We then made an overall verdict for each user based on normalized positives and negatives, and made a majority vote so the verdict could be one of the following:
+
+\begin{itemize}
+  \item Strong negativde
+  \item Slight negative
+  \item Neutral
+  \item Slight positive
+  \item Strong positive\\
+\end{itemize}
+
+As wewanted to compare the groups, we compared an equal large population of them. As susceptible was smaller, we chosed 487 of the non-susceptible group. \\
+
+PICTURE HERE!!!\\
+
+As we can see from the result, there are really no particularly differences between the groups. Though from the figure in this example, we can see that the susceptible is generally more positive than the non-susceptible. But to generalize this, will be a very weak assumption. 
 
 \subsection{Theory}
 
