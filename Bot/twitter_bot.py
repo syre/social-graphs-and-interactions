@@ -391,7 +391,7 @@ def find_best_retweet():
         if pred > prob:
             best_tweet = tweet
             prob = pred
-    return tweet
+    return best_tweet
 
 def intervention_retweet(hashtag):
     # goddamn that unparseable url
