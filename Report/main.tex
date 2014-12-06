@@ -86,7 +86,79 @@ which group follow the most high-profile users (100k followers or more).
 \subsection{Statistics}
 In comparing the data between the two groups, we will use a Welch t-test to test the null hypothesis that they have equal means or the alternative hypothesis that there is a difference in means of the two groups.
 
-\begin{table}[h]
+\begin{table}[ht]
+\begin{tabular}{llllll}
+\textbf{}       & Mean     & Median & Std. Dev & Upper Q. & Lower Q. \\
+Non-susceptible & 1458.659 & 1580   & 732.116  & 2066     & 932      \\
+Susceptible     & 1204.547 & 1190   & 750.312  & 1919     & 500     
+\end{tabular}
+\caption{Statistics for age of account}
+\end{table}
+
+\begin{table}[ht]
+\begin{tabular}{llllll}
+\textbf{}       & Mean      & Median & Std. Dev    & Upper Q. & Lower Q. \\
+Non-susceptible & 61266.122 & 1095   & 1478798.298 & 6013     & 303.5    \\
+Susceptible     & 13273.042 & 1062   & 72809.619   & 1919     & 388     
+\end{tabular}
+\caption{Statistics for follower count}
+\end{table}
+
+\begin{table}[ht]
+\begin{tabular}{llllll}
+\textbf{}       & Mean      & Median & Std. Dev  & Upper Q. & Lower Q. \\
+Non-susceptible & 11109.594 & 2527   & 23591.433 & 10298.5  & 604      \\
+Susceptible     & 10574.918 & 2796   & 21419.868 & 3530     & 709     
+\end{tabular}
+\caption{Statistics for statuses count}
+\end{table}
+
+\begin{table}[ht]
+\begin{tabular}{llllll}
+\textbf{}       & Mean      & Median & Std. Dev  & Upper Q. & Lower Q. \\
+Non-susceptible & 9653.624  & 1138   & 41365.673 & 3092     & 431      \\
+Susceptible     & 10852.841 & 1389   & 56008.349 & 10904    & 592     
+\end{tabular}
+\caption{Statistics for friends count}
+\end{table}
+
+\begin{table}[ht]
+\begin{tabular}{llllll}
+\textbf{}       & Mean    & Median & Std. Dev & Upper Q. & Lower Q. \\
+Non-susceptible & 422.103 & 239    & 644.575  & 546      & 71       \\
+Susceptible     & 531.790 & 337    & 594.212  & 745.5    & 120     
+\end{tabular}
+\caption{Statistics for total hashtags for latest 1000 tweets}
+\end{table}
+
+\begin{table}[ht]
+\begin{tabular}{llllll}
+\textbf{}       & Mean     & Median & Std. Dev  & Upper Q. & Lower Q. \\
+Non-susceptible & 2631.046 & 140.5  & 42591.170 & 447.75   & 35.75    \\
+Susceptible     & 856.482  & 112    & 4899.689  & 275      & 32.5    
+\end{tabular}
+\caption{Statistics for total number of incoming favorited tweets for latest tweets (up to a max of 1000)}
+\end{table}
+
+\begin{table}[ht]
+\begin{tabular}{llllll}
+\textbf{}       & Mean    & Median & Std. Dev & Upper Q. & Lower Q. \\
+Non-susceptible & 318.712 & 206    & 312.943  & 524.25       & 60   \\
+Susceptible     & 314.652 & 196    & 301.290  & 543       & 66    
+\end{tabular}
+\caption{Statistics for total number of urls for latest tweets (up to a max of 1000)}
+\end{table}
+
+\begin{table}[ht]
+\begin{tabular}{llllll}
+\textbf{}       & Mean       & Median  & Std. Dev    & Upper Q. & Lower Q. \\
+Non-susceptible & 211963.458 & 14833.5 & 794069.88   & 94021    & 1794.25  \\
+Susceptible     & 296314.418 & 25401   & 1412893.447 & 66       & 3261.5  
+\end{tabular}
+\caption{Statistics for total number of retweets for latest tweets (up to a max of 1000)}
+\end{table}
+
+\begin{table}[ht]
 \centering
 \begin{tabular}{lllll}
 \hline
@@ -95,9 +167,12 @@ Age & 1204.629 & 1456.636 & 4.952e-10 & 6.290 \\
 Friends & 9638.393 & 10919.615 & -0.445 & 0.649 \\
 Followers & 13369.934 & 61028.298 & -1.107 & 0.268 \\
 Hashtags & 531.755 & 422.087 & -3.329 & 0.0009 \\
-Statuses & 10627.834 & 11073.442 & 0.707 & -0.374 \\ \hline
+Urls & 314.652 & 318.712 & 0.246 & 0.805 \\
+Statuses & 10627.834 & 11073.442 & -0.374 & 0.707 \\
+Retweeted tweets & 296314.418 & 211963.458 & -1.236 & 0.216 \\
+Favorited tweets & 856.482 & 2631.046 & 1.396 & 0.162 \\ \hline
 \end{tabular}
-\caption{The table above shows the mean of each metric for the susceptible users and non-susceptible users, the hashtags metric are hashtags used for a maximum of 1000 tweets, the age of account is specified in days.}
+\caption{The table above shows the mean of each metric for the susceptible users and non-susceptible users. The hashtags metric are hashtags used for a maximum of 1000 tweets. The retweeted tweets metric are the total number of times the users tweets have been retweeted for a maximum of 1000 tweets. The favorited tweets metric are the total number of times the users tweets have been favorited for a maximum of 1000 tweets. The age of account is specified in days.}
 \end{table}
 
 \subsection{Network}
@@ -106,7 +181,7 @@ We wanted to see if one of the groups was more positive than the other. We used 
 As both of the groups was relative large, we only classified up to the first 50 tweets per user. Some of the users haven't 50 tweet, so we just classified all tweets. 
 Table \ref{sentimentKeyNumbers} show the ratios of the analysis. 
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \begin{tabular}{lll}
 \hline
