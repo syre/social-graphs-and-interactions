@@ -61,10 +61,6 @@ def save_own_current_tweets(tweet_db, tweet, flag=0):
     """saves a history over "used" tweets to a mongodb collection"""
     tweetSave = {"text": tweet, "tweeted_at": datetime.datetime.now().isoformat(), "response":flag}
     tweet_db.insert(tweetSave)
-    #pprint.pprint("put tweet with text: {} in db: {}".format(tweet["id"], tweet_db))
-
-
-
 
 def get_user_timeline_tweets():
     """ retrieve 200 newest tweets from user timeline"""
@@ -141,7 +137,6 @@ def post_picture_tweet(text, api, url, coordinates=(HOME_LAT, HOME_LNG), display
 
 
 def post_local_picture_tweet(text, api, picture, coordinates=(HOME_LAT, HOME_LNG), display_coord=True):
-
     with open(os.path.join(os.path.dirname(__file__), picture), "rb") as image_file:
         latitude=coordinates[0]+random.uniform(0,0.02)
         longitude = coordinates[1]+random.uniform(-0.02,0.02)
@@ -396,7 +391,7 @@ def find_best_retweet():
     return best_tweet
 
 def intervention_retweet(hashtag):
-    # goddamn that unparseable url
+    # unparseable url fix
     bot_screennames = ["2787613616", "matsie_at_dtu", "hybrishybris",
                         "AndrenatorC", "CPH_Startup", "Lakerolls", "FitVeganGirl_",
                         "RichardsIndie", "TheRexyGuy", "AxelCyrilian", "Where_is_JB_now",
@@ -440,7 +435,3 @@ def intervention_favorite(hashtag):
         except (twitter.api.TwitterHTTPError,urllib.error.HTTPError) as e:
             print(e)
             continue
-
-
-if __name__ == '__main__':
-    post_tweet("Bulls vs Kings, let's go Kingslayers! #NBA #ChicagoBulls #Bulls", twitter_api)
