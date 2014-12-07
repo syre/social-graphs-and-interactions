@@ -180,8 +180,22 @@ Favorited tweets & 856.482 & 2631.046 & 1.396 & 0.162 \\ \hline
 \caption{The table above shows the mean of each metric for the susceptible users and non-susceptible users. The hashtags metric are hashtags used for a maximum of 1000 tweets. The retweeted tweets metric are the total number of times the users tweets have been retweeted for a maximum of 1000 tweets. The favorited tweets metric are the total number of times the users tweets have been favorited for a maximum of 1000 tweets. The age of account is specified in days.}
 \end{table}
 We choose a treshold of 5\% (0.05).
-We find that for the age of account and the number of hashtags, the null hypothesis can be rejected with our threshold, and thus the alternative hypothesis must be accepted that the means are significantly different from each other.
-\subsection{Machine-learning - training a classifier}
+We find that for the age of account and the number of hashtags, the null hypothesis can be rejected with our threshold, and thus the alternative hypothesis must be accepted that the means are significantly different from each other.\\
+To investigate further we create boxplots for the two metrics:\\
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{age_of_account_boxplot}
+  \caption{Boxplot for metric age of account}
+  \label{fig:age_boxplot}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{total_hashtags_boxplot}
+  \caption{Boxplot for metric total hashtags}
+  \label{fig:hashtags_boxplot}
+\end{figure}
+\subsection{Machine-learning - supervised learning}
 We trained a Logistic Regression classifier on our data-set with the features specified in the Statistics section: age of account, number of friends, number of followers, number of total hashtags, number of total urls, number of total statuses, number of retweeted tweets and number of favorited tweets. The classifier achieved a consistent accuracy of around 70\% which is the same accuracy percentage as predicting all outputs to be the largest class in our data-set (the non-susceptible class), thus for our data-set with our chosen number of features, it was not very effective.  
 \subsection{Network}
 We wanted to see if there were a difference between the networks of the two groups. To do this, we would use following methods:\\
@@ -280,7 +294,7 @@ We have used machine learning to try to classify non-susceptible users from susc
 \subsubsection{Network Theory}
 \subsubsection{Natural Language Processing}
 \subsubsection{Python and relevant libraries}
-For the bot as well as doing the analysis for this report we have relied on Python, its standard library and the external libraries: twitter, nltk, sklearn, requests, beautiful soup, numpy, pymongo.
+For the bot as well as doing the analysis for this report we have relied on Python, its standard library and the external libraries: twitter, nltk, sklearn, requests, beautiful soup, numpy, pymongo, networkx.
 \section{Conclusion}
 
 
