@@ -2,11 +2,14 @@
 \pdfoutput=1
 
 \usepackage{graphicx}
+\graphicspath{{figures/}}
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage[table]{xcolor}
 \usepackage{pdfpages}
+\usepackage[justification=centering]{caption}
+\usepackage{float}
 
 \hypersetup{colorlinks=true,citecolor=[rgb]{0,0.4,0}}
 
@@ -140,7 +143,7 @@ Susceptible     & 856.482  & 112    & 4899.689  & 275      & 32.5
 \caption{Statistics for total number of incoming favorited tweets for latest tweets (up to a max of 1000)}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
 \begin{tabular}{llllll}
 \textbf{}       & Mean    & Median & Std. Dev & Upper Q. & Lower Q. \\
 Non-susceptible & 318.712 & 206    & 312.943  & 524.25       & 60   \\
@@ -149,7 +152,7 @@ Susceptible     & 314.652 & 196    & 301.290  & 543       & 66
 \caption{Statistics for total number of urls for latest tweets (up to a max of 1000)}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
 \begin{tabular}{llllll}
 \textbf{}       & Mean       & Median  & Std. Dev    & Upper Q. & Lower Q. \\
 Non-susceptible & 211963.458 & 14833.5 & 794069.88   & 94021    & 1794.25  \\
@@ -158,7 +161,7 @@ Susceptible     & 296314.418 & 25401   & 1412893.447 & 66       & 3261.5
 \caption{Statistics for total number of retweets for latest tweets (up to a max of 1000)}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \begin{tabular}{lllll}
 \hline
@@ -177,20 +180,68 @@ Favorited tweets & 856.482 & 2631.046 & 1.396 & 0.162 \\ \hline
 \subsection{Machine-learning - training a classifier}
 We trained a Logistic Regression classifier on our data-set with the features specified in the Statistics section, and we achieved a consistent accuracy of around 70\% which is the same accuracy percentage as predicting all outputs to be the largest class in our data-set (the non-susceptible class), thus it was not very effective.  
 \subsection{Network}
+We wanted to see if there were a difference between the networks of  the two groups. To do this, we would use following methods:\\
+\begin{itemize}
+  \item Average shortest path
+  \item Clustering coefficient 
+  \item Degree (average degree and degree distribution) \\
+\end{itemize}
+ There was multiple solutions to fetch the networks, depending on how we defined the network for a group. \\
+The first solutions was to fetch all (or a big amount) of each users followers in the group. This idea was quickly dropped do to the Twitter API rate limit. It would simply take forever. \\
+In the beginning we were concerned about the proportion which wasn't connected to others in the network. We knew we couldn't avoid this, but maybe we could minimize it. Therefore, the second solution was to find all of the users in first indent (of the group) where minimum one of the users followed the other. This could minimize the non-connected nodes. In the other hand, we could see we manipulated the data which was a no go. \\
+The final solution which we ended up with, was to take a portion of the user in which group - we chosed 30. Then we found 100 of their followers and added them as nodes (with the user itself) and their friendship as edges. \\
+
+As we still ended up with a network not entirely connected, we couldn't calculate the average shortest path and clustering coefficient as it was. But we found a solution to this: Giant component. \\
+A giant component is the largest sub-graph of the super-graph where all of the nodes is connected. \\
+This could perhaps help us to investigate the two networks further. \\
+
+With help of Networkx\cite{networkx} we found the Giant components of the two groups and with Gephi\cite{gephi} could we visualize them - Figure \ref{fig:giant_comp_non_sus} and \ref{fig:giant_comp_sus}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{non_rec_giant_component}
+  \caption{Giant component of non-susceptible group}
+  \label{fig:giant_comp_non_sus}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{rec_giant_component}
+  \caption{Giant component of susceptible group}
+  \label{fig:giant_comp_sus}
+\end{figure} 
+
+
+MANGLER FORKLARING PÅ RESULTAT!!!
+
+\begin{table}[H]
+\begin{tabular}{lcc}
+\hline
+                      & Susceptible & Non-susceptible \\ \hline
+No. of nodes          & 1326        & 1318            \\
+No. of edges          & 1412        & 1358            \\
+Average shortest path & 4.3363      & 4.3516          \\
+Average degree        & 2.127       & 2.061           \\ \hline
+\end{tabular}
+\caption{Statistics for the networks of the Giant components}
+\end{table}
+
+
 \subsection{Sentiment analysis}
 We wanted to see if one of the groups was more positive than the other. We used machine learning, by building a classifier based on a corpus. The classifier was based on a simple Naive Bayes and the corpus was based on 13333 positive and negative tweets (26666 tweets total). \\
 As both of the groups was relative large, we only classified up to the first 50 tweets per user. Some of the users haven't 50 tweet, so we just classified all tweets. 
 Table \ref{sentimentKeyNumbers} show the ratios of the analysis. 
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \begin{tabular}{lll}
 \hline
                        & Susceptible & Non-susceptible \\ \hline
-No. of users           & 487         & Et tal her!!!   \\
-No. of tweets          & 23785       & Et tal her!!!   \\
-No. of positive tweets & 14870       & Et tal her!!!   \\
-No. of negative tweets & 8915        & Et tal her!!!   \\ \hline
+No. of users           & 487         & 1160   \\
+No. of tweets          & 23785       & 56097   \\
+No. of positive tweets & 14870       & 33468   \\
+No. of negative tweets & 8915        & 22629   \\ \hline
 \end{tabular}
 \caption{Ratios of the sentiment analysis}
 \label{tab:sentimentKeyNumbers}
@@ -208,7 +259,13 @@ Every of the classified tweets for each user, got either a 0 (negative) or 1 (po
 
 As we wanted to compare the groups, we compared an equal large population of them. As susceptible was smaller, we chose 487 of the non-susceptible group, so the both was 487.  \\
 
-PICTURE HERE!!!\\
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{sentiment_barplot}
+  \caption{Sentiment distribution between the two groups}
+  \label{fig:sentiment_barplot}
+\end{figure}
+
 
 As we can see from the result, there are really no particularly differences between the groups. Though from the figure in this example, we can see that the susceptible is generally more positive than the non-susceptible. But to generalize this, will be a very weak assumption. 
 
@@ -225,6 +282,14 @@ As we can see from the result, there are really no particularly differences betw
 \bibitem{twitterprofile}
 \url{twitter.com/JackBoHorseMan}
 \textit{JackBoHorseMan Twitter Profile}
+
+\bibitem{networkx}
+\url{https://networkx.github.io/}
+\textit{Networkx package for Python}
+
+\bibitem{gephi}
+\url{http://gephi.github.io/}
+\textit{Gephi - network visualization}
 
 \end{thebibliography}
 
