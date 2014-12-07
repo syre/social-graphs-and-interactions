@@ -44,7 +44,7 @@ Once a day we followed new twitter users based on two principles:
 \begin{itemize}
 \item Followback query: we performed a search for new users using a query on "followback", and followed them hoping they would follow us back. This principle was to artificially boost the number of followers and followed of the bot and thus look more attractive from a social point of view to potential human users.
 \item Human query: we performed a search for new users based in San Francisco and followed them, the followers generated this way creates data for the later analysis of subsceptibility.\\
- If the users we followed didn't follow us back within 24 hours, we unfollowed them to make sure the ratio of followers to followed was kept as low as possible as a high ratio might arouse suspicion.
+ If the users we followed didn't follow us back within 24 hours, we unfollowed them to make sure the ratio of followers to followed was kept as low as possible as a high ratio might arouse suspicion that our account is a bot account.
 \end{itemize}
 \subsection{Retweeting}
 Once a day we retweeted content twice based on two different principles:
@@ -57,12 +57,12 @@ Once a day we retweeted content twice based on two different principles:
 The bot updated the Twitter profile every third day with a new profile banner based on a Google Image search, finding 50 on topics: horses, animals, indie, maldives, chicago bulls, san francisco monuments. This was done to make the bot appear more human as well as to pique the interest of potential followers.
 
 \section{Interventions}
-In the last part of the course, the whole class should make interventions through their bots. The intervention should hype some predifined hashtags through two personal tweets per day every Mondays, Wednesdays and Fridays plus thanksgiving. \\
-Out strategy was to have the bot do it total autonomously so we didn't have to intervene. \\
+In the last part of the course, the whole class participated in "interventions" through their bots, Events where the bots collectively posted, retweeted and favorited content about a specific subject. These interventions hyped some predifined hashtags through two original tweets per day every Mondays, Wednesdays and Fridays plus at Thanksgiving. \\
+Out strategy was to have the bot do it autonomously so we didn't have to intervene. \\
 
-We wrote all the personal tweets and their hashtags in a semicolon seperated text-file where the specified date was the first element - then the two tweets. Our bot could then read the file, make a dict with the dates as keys and the two tweets as values. \\
+We wrote all the original tweets and their hashtags in a semicolon seperated text-file where the specified date was the first element - then the two tweets. Our bot could then read the file, make a dictionary with the dates as keys and the two tweets as values. \\
 
-We had a window where we should tweet those two tweets - between 6pm and 9am danish time. To make some randomness to the time where the posts of the tweets would occur, we made a couple of random sleeps. One before the first tweet and two between the first and second tweet. \\
+The window where the bot posted the two tweets was between 9am and 1pm San Francisco time. We add randomness to the time where the posts of the tweets would occur, by using random.sleep before both of the tweets.\\
 Two cron jobs ensured that the bot did every Mondays, Wednesdays and Fridays plus thanksgiving.
 
 \section{Susceptibility analysis}
@@ -87,86 +87,88 @@ degree distribution
 which group follow the most high-profile users (100k followers or more).
 
 \subsection{Statistics}
-In comparing the data between the two groups, we will use a Welch t-test to test the null hypothesis that they have equal means or the alternative hypothesis that there is a difference in means of the two groups.
+This section contains statistics for each group with respect to: mean, median, standard deviation, upper quartile (75\% percentile) and lower quartile (25\% percentile).\\\\
 
 \begin{table}[ht]
 \begin{tabular}{llllll}
-\textbf{}       & Mean     & Median & Std. Dev & Upper Q. & Lower Q. \\
-Non-susceptible & 1458.659 & 1580   & 732.116  & 2066     & 932      \\
-Susceptible     & 1204.547 & 1190   & 750.312  & 1919     & 500     
+\textbf{}       & Mean     & Median & Std. Dev & Lower Q. & Upper Q. \\
+Non-susceptible & 1458.659 & 1580   & 732.116  & 932     & 2066      \\
+Susceptible     & 1204.547 & 1190   & 750.312  &  500    &   1919   
 \end{tabular}
 \caption{Statistics for age of account}
 \end{table}
-
+For the age of account metric, we see a difference in the means and medians for the two groups with account age for the susceptible group being slightly lower, we see a similarity in standard deviation and upper percentile, with the susceptible group having a low lower quartile.
 \begin{table}[ht]
 \begin{tabular}{llllll}
-\textbf{}       & Mean      & Median & Std. Dev    & Upper Q. & Lower Q. \\
-Non-susceptible & 61266.122 & 1095   & 1478798.298 & 6013     & 303.5    \\
-Susceptible     & 13273.042 & 1062   & 72809.619   & 1919     & 388     
+\textbf{}       & Mean      & Median & Std. Dev    & Lower Q. & Upper Q. \\
+Non-susceptible & 61266.122 & 1095   & 1478798.298 & 303.5    &  6013    \\
+Susceptible     & 13273.042 & 1062   & 72809.619   & 388     &   1919   
 \end{tabular}
 \caption{Statistics for follower count}
 \end{table}
 
 \begin{table}[ht]
 \begin{tabular}{llllll}
-\textbf{}       & Mean      & Median & Std. Dev  & Upper Q. & Lower Q. \\
-Non-susceptible & 11109.594 & 2527   & 23591.433 & 10298.5  & 604      \\
-Susceptible     & 10574.918 & 2796   & 21419.868 & 3530     & 709     
+\textbf{}       & Mean      & Median & Std. Dev  & Lower Q. & Upper Q. \\
+Non-susceptible & 11109.594 & 2527   & 23591.433 &  604  & 10298.5     \\
+Susceptible     & 10574.918 & 2796   & 21419.868 & 709    &   3530    
 \end{tabular}
 \caption{Statistics for statuses count}
 \end{table}
 
 \begin{table}[ht]
 \begin{tabular}{llllll}
-\textbf{}       & Mean      & Median & Std. Dev  & Upper Q. & Lower Q. \\
-Non-susceptible & 9653.624  & 1138   & 41365.673 & 3092     & 431      \\
-Susceptible     & 10852.841 & 1389   & 56008.349 & 10904    & 592     
+\textbf{}       & Mean      & Median & Std. Dev  & Lower Q. & Upper Q. \\
+Non-susceptible & 9653.624  & 1138   & 41365.673 & 431     &  3092     \\
+Susceptible     & 10852.841 & 1389   & 56008.349 & 592    &   10904   
 \end{tabular}
 \caption{Statistics for friends count}
 \end{table}
 
 \begin{table}[ht]
 \begin{tabular}{llllll}
-\textbf{}       & Mean    & Median & Std. Dev & Upper Q. & Lower Q. \\
-Non-susceptible & 422.103 & 239    & 644.575  & 546      & 71       \\
-Susceptible     & 531.790 & 337    & 594.212  & 745.5    & 120     
+\textbf{}       & Mean    & Median & Std. Dev & Lower Q. & Upper Q. \\
+Non-susceptible & 422.103 & 239    & 644.575  & 71     & 546        \\
+Susceptible     & 531.790 & 337    & 594.212  & 120    &  745.5    
 \end{tabular}
 \caption{Statistics for total hashtags for latest 1000 tweets}
 \end{table}
 
 \begin{table}[ht]
 \begin{tabular}{llllll}
-\textbf{}       & Mean     & Median & Std. Dev  & Upper Q. & Lower Q. \\
-Non-susceptible & 2631.046 & 140.5  & 42591.170 & 447.75   & 35.75    \\
-Susceptible     & 856.482  & 112    & 4899.689  & 275      & 32.5    
+\textbf{}       & Mean     & Median & Std. Dev  & Lower Q. & Upper Q. \\
+Non-susceptible & 2631.046 & 140.5  & 42591.170 & 35.75  & 447.75     \\
+Susceptible     & 856.482  & 112    & 4899.689  & 32.5     &  275    
 \end{tabular}
 \caption{Statistics for total number of incoming favorited tweets for latest tweets (up to a max of 1000)}
 \end{table}
 
 \begin{table}[H]
 \begin{tabular}{llllll}
-\textbf{}       & Mean    & Median & Std. Dev & Upper Q. & Lower Q. \\
-Non-susceptible & 318.712 & 206    & 312.943  & 524.25       & 60   \\
-Susceptible     & 314.652 & 196    & 301.290  & 543       & 66    
+\textbf{}       & Mean    & Median & Std. Dev & Lower Q. & Upper Q. \\
+Non-susceptible & 318.712 & 206    & 312.943  & 60       &  524.25  \\
+Susceptible     & 314.652 & 196    & 301.290  & 66       &   543  
 \end{tabular}
 \caption{Statistics for total number of urls for latest tweets (up to a max of 1000)}
 \end{table}
 
 \begin{table}[H]
 \begin{tabular}{llllll}
-\textbf{}       & Mean       & Median  & Std. Dev    & Upper Q. & Lower Q. \\
-Non-susceptible & 211963.458 & 14833.5 & 794069.88   & 94021    & 1794.25  \\
-Susceptible     & 296314.418 & 25401   & 1412893.447 & 66       & 3261.5  
+\textbf{}       & Mean       & Median  & Std. Dev    & Lower Q. & Upper Q. \\
+Non-susceptible & 211963.458 & 14833.5 & 794069.88   & 1794.25    & 94021  \\
+Susceptible     & 296314.418 & 25401   & 1412893.447 & 3261.5   &  118909 
 \end{tabular}
 \caption{Statistics for total number of retweets for latest tweets (up to a max of 1000)}
 \end{table}
+
+In comparing the data between the two groups, we will use a Welch t-test for testing populations with unequal variances to test the null hypothesis that they have equal means or the alternative hypothesis that there is a difference in means of the two groups.
 
 \begin{table}[H]
 \centering
 \begin{tabular}{lllll}
 \hline
 Metric & Reciprocal & Non-reciprocal & t-value & p-value \\ \hline
-Age & 1204.629 & 1456.636 & 4.952e-10 & 6.290 \\
+Age & 1204.629 & 1456.636 & 6.290 & 4.952e-10\\
 Friends & 9638.393 & 10919.615 & -0.445 & 0.649 \\
 Followers & 13369.934 & 61028.298 & -1.107 & 0.268 \\
 Hashtags & 531.755 & 422.087 & -3.329 & 0.0009 \\
@@ -177,10 +179,12 @@ Favorited tweets & 856.482 & 2631.046 & 1.396 & 0.162 \\ \hline
 \end{tabular}
 \caption{The table above shows the mean of each metric for the susceptible users and non-susceptible users. The hashtags metric are hashtags used for a maximum of 1000 tweets. The retweeted tweets metric are the total number of times the users tweets have been retweeted for a maximum of 1000 tweets. The favorited tweets metric are the total number of times the users tweets have been favorited for a maximum of 1000 tweets. The age of account is specified in days.}
 \end{table}
+We choose a treshold of 5\% (0.05).
+We find that for the age of account and the number of hashtags, the null hypothesis can be rejected with our threshold, and thus the alternative hypothesis must be accepted that the means are significantly different from each other.
 \subsection{Machine-learning - training a classifier}
-We trained a Logistic Regression classifier on our data-set with the features specified in the Statistics section, and we achieved a consistent accuracy of around 70\% which is the same accuracy percentage as predicting all outputs to be the largest class in our data-set (the non-susceptible class), thus it was not very effective.  
+We trained a Logistic Regression classifier on our data-set with the features specified in the Statistics section: age of account, number of friends, number of followers, number of total hashtags, number of total urls, number of total statuses, number of retweeted tweets and number of favorited tweets. The classifier achieved a consistent accuracy of around 70\% which is the same accuracy percentage as predicting all outputs to be the largest class in our data-set (the non-susceptible class), thus for our data-set with our chosen number of features, it was not very effective.  
 \subsection{Network}
-We wanted to see if there were a difference between the networks of  the two groups. To do this, we would use following methods:\\
+We wanted to see if there were a difference between the networks of the two groups. To do this, we would use following methods:\\
 \begin{itemize}
   \item Average shortest path
   \item Clustering coefficient 
@@ -189,7 +193,7 @@ We wanted to see if there were a difference between the networks of  the two gro
  There was multiple solutions to fetch the networks, depending on how we defined the network for a group. \\
 The first solutions was to fetch all (or a big amount) of each users followers in the group. This idea was quickly dropped do to the Twitter API rate limit. It would simply take forever. \\
 In the beginning we were concerned about the proportion which wasn't connected to others in the network. We knew we couldn't avoid this, but maybe we could minimize it. Therefore, the second solution was to find all of the users in first indent (of the group) where minimum one of the users followed the other. This could minimize the non-connected nodes. In the other hand, we could see we manipulated the data which was a no go. \\
-The final solution which we ended up with, was to take a portion of the user in which group - we chosed 30. Then we found 100 of their followers and added them as nodes (with the user itself) and their friendship as edges. \\
+The final solution which we ended up with, was to take 30 of the users in each group randomly chosen as well as 100 of their followers and constructing a network graph from that data. \\
 
 As we still ended up with a network not entirely connected, we couldn't calculate the average shortest path and clustering coefficient as it was. But we found a solution to this: Giant component. \\
 A giant component is the largest sub-graph of the super-graph where all of the nodes is connected. \\
@@ -270,7 +274,13 @@ As we wanted to compare the groups, we compared an equal large population of the
 As we can see from the result, there are really no particularly differences between the groups. Though from the figure in this example, we can see that the susceptible is generally more positive than the non-susceptible. But to generalize this, will be a very weak assumption. 
 
 \subsection{Theory}
-
+We have used several of the tools learned in the course for the report, below is a list of tools we have used.\\
+\subsubsection{Machine learning}
+We have used machine learning to try to classify non-susceptible users from susceptible users. We used the dataset the bot has accumulated over the duration of the course with a Logistic Regression classifier. However we found with our selected features, classifier and data-set we were not successful in classifying above simply predicting the largest class in the data-set.
+\subsubsection{Network Theory}
+\subsubsection{Natural Language Processing}
+\subsubsection{Python and relevant libraries}
+For the bot as well as doing the analysis for this report we have relied on Python, its standard library and the external libraries: twitter, nltk, sklearn, requests, beautiful soup, numpy, pymongo.
 \section{Conclusion}
 
 
