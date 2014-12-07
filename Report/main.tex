@@ -63,7 +63,15 @@ Out strategy was to have the bot do it autonomously so we didn't have to interve
 We wrote all the original tweets and their hashtags in a semicolon seperated text-file where the specified date was the first element - then the two tweets. Our bot could then read the file, make a dictionary with the dates as keys and the two tweets as values. \\
 
 The window where the bot posted the two tweets was between 9am and 1pm San Francisco time. We add randomness to the time where the posts of the tweets would occur, by using random.sleep before both of the tweets.\\
-Two cron jobs ensured that the bot did every Mondays, Wednesdays and Fridays plus thanksgiving.
+Two cron jobs ensured that the bot did every Mondays, Wednesdays and Fridays plus thanksgiving.\\\\\\\\
+
+
+\begin{figure}[H]
+  \centering
+ \hspace*{-1.8cm}\includegraphics[trim=0.5cm 15cm 0.5cm 4cm,width=4.3in]{intervention_timeline}
+  \caption{Timeline over out bots activities}
+  \label{fig:bot}
+\end{figure}
 
 \section{Susceptibility analysis}
 \subsection{User groups}
@@ -89,7 +97,7 @@ which group follow the most high-profile users (100k followers or more).
 \subsection{Statistics}
 This section contains statistics for each group with respect to: mean, median, standard deviation, upper quartile (75\% percentile) and lower quartile (25\% percentile).\\\\
 
-\begin{table}[ht]
+\begin{table}[h!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean     & Median & Std. Dev & Lower Q. & Upper Q. \\
 Non-susceptible & 1458.659 & 1580   & 732.116  & 932     & 2066      \\
@@ -98,7 +106,7 @@ Susceptible     & 1204.547 & 1190   & 750.312  &  500    &   1919
 \caption{Statistics for age of account}
 \end{table}
 For the age of account metric, we see a difference in the means and medians for the two groups with account age for the susceptible group being slightly lower, we see a similarity in standard deviation and upper percentile, with the susceptible group having a low lower quartile.
-\begin{table}[h!]
+\begin{table}[h]
 \begin{tabular}{llllll}
 \textbf{}       & Mean      & Median & Std. Dev    & Lower Q. & Upper Q. \\
 Non-susceptible & 61266.122 & 1095   & 1478798.298 & 303.5    &  6013    \\
@@ -107,7 +115,7 @@ Susceptible     & 13273.042 & 1062   & 72809.619   & 388     &   1919
 \caption{Statistics for follower count}
 \end{table}
 
-\begin{table}[h!]
+\begin{table}[h]
 \begin{tabular}{llllll}
 \textbf{}       & Mean      & Median & Std. Dev  & Lower Q. & Upper Q. \\
 Non-susceptible & 11109.594 & 2527   & 23591.433 &  604  & 10298.5     \\
@@ -125,7 +133,7 @@ Susceptible     & 10852.841 & 1389   & 56008.349 & 592    &   10904
 \caption{Statistics for friends count}
 \end{table}
 
-\begin{table}[h!]
+\begin{table}[h]
 \begin{tabular}{llllll}
 \textbf{}       & Mean    & Median & Std. Dev & Lower Q. & Upper Q. \\
 Non-susceptible & 422.103 & 239    & 644.575  & 71     & 546        \\
@@ -134,7 +142,7 @@ Susceptible     & 531.790 & 337    & 594.212  & 120    &  745.5
 \caption{Statistics for total hashtags for latest 1000 tweets}
 \end{table}
 
-\begin{table}[h!]
+\begin{table}[h]
 \begin{tabular}{llllll}
 \textbf{}       & Mean     & Median & Std. Dev  & Lower Q. & Upper Q. \\
 Non-susceptible & 2631.046 & 140.5  & 42591.170 & 35.75  & 447.75     \\
@@ -143,7 +151,7 @@ Susceptible     & 856.482  & 112    & 4899.689  & 32.5     &  275
 \caption{Statistics for total number of incoming favorited tweets for latest tweets (up to a max of 1000)}
 \end{table}
 
-\begin{table}[h!]
+\begin{table}[h]
 \begin{tabular}{llllll}
 \textbf{}       & Mean    & Median & Std. Dev & Lower Q. & Upper Q. \\
 Non-susceptible & 318.712 & 206    & 312.943  & 60       &  524.25  \\
@@ -152,7 +160,7 @@ Susceptible     & 314.652 & 196    & 301.290  & 66       &   543
 \caption{Statistics for total number of urls for latest tweets (up to a max of 1000)}
 \end{table}
 
-\begin{table}[h!]
+\begin{table}[h]
 \begin{tabular}{llllll}
 \textbf{}       & Mean       & Median  & Std. Dev    & Lower Q. & Upper Q. \\
 Non-susceptible & 211963.458 & 14833.5 & 794069.88   & 1794.25    & 94021  \\
@@ -187,8 +195,9 @@ We trained a Logistic Regression classifier on our data-set with the features sp
 We wanted to see if there were a difference between the networks of the two groups. To do this, we would use following methods:\\
 \begin{itemize}
   \item Average shortest path
-  \item Clustering coefficient 
-  \item Degree (average degree and degree distribution) \\
+  \item Degree (average degree and degree distribution)
+  \item Clustering coefficient
+  \item Betweenness centrality \\
 \end{itemize}
  There was multiple solutions to fetch the networks, depending on how we defined the network for a group. \\
 The first solutions was to fetch all (or a big amount) of each users followers in the group. This idea was quickly dropped do to the Twitter API rate limit. It would simply take forever. \\
@@ -216,26 +225,73 @@ With help of Networkx\cite{networkx} we found the Giant components of the two gr
   \label{fig:giant_comp_sus}
 \end{figure} 
 
+\subsubsection{Average shortest path and average degree}
+We we can see from Table \ref{tab:networkKeyNumbers} that here are no special difference between the two groups.  Both average shortest path and average degree is approx. the same.
 
-MANGLER FORKLARING PÅ RESULTAT!!!
 
 \begin{table}[H]
+\centering
 \begin{tabular}{lcc}
 \hline
                       & Susceptible & Non-susceptible \\ \hline
 No. of nodes          & 1326        & 1318            \\
 No. of edges          & 1412        & 1358            \\
-Average shortest path & 4.3363      & 4.3516          \\
+Average shortest path length & 4.3363      & 4.3516          \\
 Average degree        & 2.127       & 2.061           \\ \hline
 \end{tabular}
 \caption{Statistics for the networks of the Giant components}
+\label{tab:networkKeyNumbers}
 \end{table}
+
+If we find the degree distribution for the groups, and plot them (Figure \ref{fig:degree_distribution}), we can that the are almost identically. 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{degree_distribution}
+  \caption{Degree distribution for the two groups}
+  \label{fig:degree_distribution}
+\end{figure}
+
+
+\subsubsection{Clustering coefficient}
+We calculated the global clustering coefficient of the groups. At non-susceptible, it gave 0.0. At susceptible it gave a very small number: 0.0002516.\\
+
+This means that with non-susceptible there are 0\% chance for a nodes neighbours also are connected. 
+With susceptible there are approx. 0.02516\% chance for a nodes neighbours also are connected. \\
+If we look at the maximum local clustering coefficient, the non-susceptible has a maximum of 0.0, while the susceptible has a maximum of 0.3333. \\
+Table \ref{tab:clustering_coefficient} summarize this. 
+\begin{table}[H]
+\centering
+\begin{tabular}{lcc}
+\hline
+                      & Susceptible & Non-susceptible \\ \hline
+Global clustering coefficient & 0.0002516 & 0.0           \\
+Maximum local clustering coefficient          & 0.3333        & 0.0     \\ \hline
+\end{tabular}
+\caption{Clustering coefficients of the groups}
+\label{tab:clustering_coefficient}
+\end{table}
+
+By this there seems to be a difference between the groups by comparing the clustering coefficients. \\
+
+\subsubsection{Betweenness centrality}
+We want see if there was a difference between the centrality in the networks, where we used betweenness centrality as a measure. Betweenness centrality of a node is equal to the number of shortest paths from all nodes to all other that pass through that node\cite{betweenness}. \\
+So the higher betweenness a node has, the more influence has the node on the network. 
+In our case this corresponds to a user is very indirected connected to many others in the network. 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{betweenness_centrality}
+  \caption{Betweenness centrality for nodes in the groups}
+  \label{fig:betweenness_centrality}
+\end{figure}
+The betweenness centrality is visualized in Figure \ref{fig:betweenness_centrality}. We an compare the two groups by looking on how big the values are and how many of the high values the groups have. \\
+We can see that non-susceptible has a node with a very big value around 0.6, where non-susceptible has a maximum around 0.3 (illustrated by the red, dashed line). 
+The other nodes in susceptible seems to be a bit lower in general compared to non-susceptible. But to be sure it has to be analysed further. 
 
 
 \subsection{Sentiment analysis}
 We wanted to see if one of the groups was more positive than the other. We used machine learning, by building a classifier based on a corpus. The classifier was based on a simple Naive Bayes and the corpus was based on 13333 positive and negative tweets (26666 tweets total). \\
 As both of the groups was relative large, we only classified up to the first 50 tweets per user. Some of the users haven't 50 tweet, so we just classified all tweets. 
-Table \ref{sentimentKeyNumbers} show the ratios of the analysis. 
+Table \ref{tab:sentimentKeyNumbers} show the ratios of the analysis. 
 
 \begin{table}[H]
 \centering
@@ -276,9 +332,12 @@ As we can see from the result, there are really no particularly differences betw
 \subsection{Theory}
 We have used several of the tools learned in the course for the report, below is a list of tools we have used.\\
 \subsubsection{Machine learning}
-We have used machine learning to try to classify non-susceptible users from susceptible users. We used the dataset the bot has accumulated over the duration of the course with a Logistic Regression classifier. However we found with our selected features, classifier and data-set we were not successful in classifying above simply predicting the largest class in the data-set.
+We have used machine learning to try to classify non-susceptible users from susceptible users. We used the dataset the bot has accumulated over the duration of the course with a Logistic Regression classifier. However we found with our selected features, classifier and data-set we were not successful in classifying above simply predicting the largest class in the data-set.\\
 \subsubsection{Network Theory}
+In network theory have we used average shortest path length, average degree and degree distribution, clustering coefficient and betweenness centrality. \\
 \subsubsection{Natural Language Processing}
+We have used NLP to find the sentiment of the users tweets, so we could tell if the user generally writes positive or negative.\\
+We used an self-made corpus and som machine learning tools. \\
 \subsubsection{Python and relevant libraries}
 For the bot as well as doing the analysis for this report we have relied on Python, its standard library and the external libraries: twitter, nltk, sklearn, requests, beautiful soup, numpy, pymongo.
 \section{Conclusion}
@@ -301,6 +360,9 @@ For the bot as well as doing the analysis for this report we have relied on Pyth
 \url{http://gephi.github.io/}
 \textit{Gephi - network visualization}
 
+\bibitem{betweenness}
+\url{http://en.wikipedia.org/wiki/Betweenness_centrality}
+\textit{Betweenness centrality - Wikipedia}
 \end{thebibliography}
 
 \clearpage
