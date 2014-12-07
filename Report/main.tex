@@ -69,7 +69,7 @@ Two cron jobs ensured that the bot did every Mondays, Wednesdays and Fridays plu
 \subsection{User groups}
 The foundation of our analysis consists of two groups: the susceptible and non-susceptible twitter users. The susceptible users group consists of 488 users, 487 of which allowed us to see their information and tweets. The non-susceptible users group consists of 1186 users, 1183 of which allowed us to see their information and tweets.
 
-For performing analysis on tweets, 26 users from the non-susceptible group did not have any tweets, which shrunk the group down to 1160 when analysing tweets. Just one of the users in the susceptible group dit not have any tweets, which gives us a group size of 487 tweets.
+For performing analysis on tweets, 26 users from the non-susceptible group did not have any tweets, which shrunk the group down to 1160 when analysing tweets. Just one of the users in the susceptible group did not have any tweets, which gives us a group size of 487 tweets.
 We will analyze the following: Age of twitter account, number of followers, number of followed, number of tweets, average links of tweets, number of hashtags, tweets in comparison to retweets.
 \\
 NLP:
@@ -146,7 +146,7 @@ Susceptible     & 10852.841 & 1389   & 56008.349 & 592    &   3000
 \end{tabular}
 \caption{Statistics for friends count}
 \end{table}
-For the friends count metric they have somewhat similar values with the susceptible having a bit higher median and mean, with a high standard deviation indicating outliers.
+For the friends count metric they have somewhat similar values with the susceptible having a bit higher median, mean and lower quartile, with a high standard deviation indicating outliers.
 \begin{figure}[H]
   \centering
   \includegraphics[width=3.0in]{friends_boxplot}
@@ -342,7 +342,9 @@ We have used machine learning to try to classify non-susceptible users from susc
 For the bot as well as doing the analysis for this report we have relied on Python, its standard library and the external libraries: twitter, nltk, sklearn, requests, beautiful soup, numpy, pymongo, networkx.
 \section{Conclusion}
 
+What have you learned from the course? Would you do anything differently? Did your strategy work? Which advice would you offer to prospective bot designers.
 
+A conclusion can be drawn that creating a human-like bot that can gain a lot of followers and to some degree influence people is possible. The things we would've done differently and our advice to future bot designers is to follow users based on the criteria we found in this report, made users susceptible. The criteria we found for making users susceptible was: Following accounts with a low account age, high number of hashtags in tweets, and possibly: low number of favorited tweets, high friend count, high number of retweet tweets.
 
 \bibliographystyle{IEEEtran}
 \bibliography{lyngby}
