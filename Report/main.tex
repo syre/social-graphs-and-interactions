@@ -89,7 +89,7 @@ which group follow the most high-profile users (100k followers or more).
 \subsection{Statistics}
 This section contains statistics for each group with respect to: mean, median, standard deviation, upper quartile (75\% percentile) and lower quartile (25\% percentile).\\\\
 
-\begin{table}[ht]
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean     & Median & Std. Dev & Lower Q. & Upper Q. \\
 Non-susceptible & 1458.659 & 1580   & 732.116  & 932     & 2066      \\
@@ -98,7 +98,7 @@ Susceptible     & 1204.547 & 1190   & 750.312  &  500    &   1919
 \caption{Statistics for age of account}
 \end{table}
 For the age of account metric, we see a difference in the means and medians for the two groups with account age for the susceptible group being slightly lower, we see a similarity in standard deviation and upper percentile, with the susceptible group having a low lower quartile.
-\begin{table}[h!]
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean      & Median & Std. Dev    & Lower Q. & Upper Q. \\
 Non-susceptible & 61266.122 & 1095   & 1478798.298 & 303.5    &  6013    \\
@@ -106,26 +106,27 @@ Susceptible     & 13273.042 & 1062   & 72809.619   & 388     &   1919
 \end{tabular}
 \caption{Statistics for follower count}
 \end{table}
-
-\begin{table}[h!]
+Looking at the table for follower count, we see an incredibly high standard deviation and high means in comparison to medians, this is usually the result of great outliers, that seems to be mostly in the non-susceptible group.
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean      & Median & Std. Dev  & Lower Q. & Upper Q. \\
 Non-susceptible & 11109.594 & 2527   & 23591.433 &  604  & 10298.5     \\
-Susceptible     & 10574.918 & 2796   & 21419.868 & 709    &   3530    
+Susceptible     & 10574.918 & 2796   & 21419.868 & 709    &   10904    
 \end{tabular}
 \caption{Statistics for statuses count}
 \end{table}
+For the statuses count we see largely similar values across the board, and a high standard deviation which indicate outliers in both groups.
 
-\begin{table}[h!]
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean      & Median & Std. Dev  & Lower Q. & Upper Q. \\
 Non-susceptible & 9653.624  & 1138   & 41365.673 & 431     &  3092     \\
-Susceptible     & 10852.841 & 1389   & 56008.349 & 592    &   10904   
+Susceptible     & 10852.841 & 1389   & 56008.349 & 592    &   3000   
 \end{tabular}
 \caption{Statistics for friends count}
 \end{table}
-
-\begin{table}[h!]
+For the friends count metric they have somewhat similar values with the susceptible having a bit higher median and mean, with a high standard deviation indicating outliers.
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean    & Median & Std. Dev & Lower Q. & Upper Q. \\
 Non-susceptible & 422.103 & 239    & 644.575  & 71     & 546        \\
@@ -133,17 +134,17 @@ Susceptible     & 531.790 & 337    & 594.212  & 120    &  745.5
 \end{tabular}
 \caption{Statistics for total hashtags for latest 1000 tweets}
 \end{table}
-
-\begin{table}[h!]
+The total hashtags metric shows somewhat similar values as well with a bit higher median and mean as well as upper quantile for the susceptible group. This could indicate that the use of hashtags is higher for the susceptible group.
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean     & Median & Std. Dev  & Lower Q. & Upper Q. \\
 Non-susceptible & 2631.046 & 140.5  & 42591.170 & 35.75  & 447.75     \\
 Susceptible     & 856.482  & 112    & 4899.689  & 32.5     &  275    
 \end{tabular}
-\caption{Statistics for total number of incoming favorited tweets for latest tweets (up to a max of 1000)}
+\caption{Statistics for total number of incoming favorited (favorite count) tweets for latest tweets (up to a max of 1000)}
 \end{table}
-
-\begin{table}[h!]
+The statistics for number of favorited tweets show a larger mean, median and upper quantile for the non-susceptible group. However the standard deviation is also an order of magnitude higher for the non-susceptible group, so this could indicate one or more outliers, especially in the non-susceptible group.
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean    & Median & Std. Dev & Lower Q. & Upper Q. \\
 Non-susceptible & 318.712 & 206    & 312.943  & 60       &  524.25  \\
@@ -151,15 +152,16 @@ Susceptible     & 314.652 & 196    & 301.290  & 66       &   543
 \end{tabular}
 \caption{Statistics for total number of urls for latest tweets (up to a max of 1000)}
 \end{table}
-
-\begin{table}[h!]
+The statistics for number of urls are very similar and not much can be concluded other than they most likely are not very different from one group to the other.
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean       & Median  & Std. Dev    & Lower Q. & Upper Q. \\
 Non-susceptible & 211963.458 & 14833.5 & 794069.88   & 1794.25    & 94021  \\
 Susceptible     & 296314.418 & 25401   & 1412893.447 & 3261.5   &  118909 
 \end{tabular}
-\caption{Statistics for total number of retweets for latest tweets (up to a max of 1000)}
+\caption{Statistics for total number of incoming retweets (retweet count) on latest tweets (up to a max of 1000)}
 \end{table}
+The mean and median are higher for the susceptible group, but both groups have large standard deviations, where the deviation for the susceptible group is especially large, which indicates outliers in both groups, especially for the susceptible group. \\\\
 
 In comparing the data between the two groups, we will use a Welch t-test for testing populations with unequal variances to test the null hypothesis that they have equal means or the alternative hypothesis that there is a difference in means of the two groups.
 
