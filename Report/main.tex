@@ -29,6 +29,7 @@ This final project tries to look into what makes a human subsceptible to follow 
 The purpose of DTU course 02805: Social Graph and Interactions is to make the students familiar with social networks and use network theory, natural language processing, datamining and machine learning to analyze these networks. All of the students were given the task of creating a Twitter bot with the purpose of "infiltrating" Twitter and gain followers. To gain followers the bot should try to imitate being a human user. As the followers and "Twitter presence" of the bot grew, it was used to try to influence the people of San Francisco through interventions. Interventions are created by letting all the bots tweet, retweet and favorite using a predetermined hashtag and in this way generate interactions from Twitter users. For the course, we created the bot JackBoHorseMan\cite{twitterprofile}, a 30-something male from Chicago, who loves animals, indie music, travelling and the Bulls.
 
 \section{Implementation}
+This section deals with explaining the implementation and features of the bot.
 \subsection{Circadian Rhythm}
 By using the job-scheduler cron we were able to make the bot interact with Twitter in a simulated circadian rhythm between 8:00 to 22:00 PST (San Francisco Timezone), with a random delay of 0 to 15 minutes included. This was done to make the bot appear more human.
 The implementations in the next subsections all operate only in the circadian rhythm specified here.
@@ -37,7 +38,7 @@ The implementations in the next subsections all operate only in the circadian rh
 The bot tweeted using two principles:
 \begin{itemize}
 \item Personal tweets: we created a list of predetermined tweets that the bot could select tweets from, communicating every-day situations as working late or waiting for the weekend or being tired on a monday that human users might relate or respond to.
-\item Event tweets: The bot scraped the website of San Francisco Weekly and collected upcoming events like concerts, book readings, plays and tweeted about them in a fitting context randomly chosen from a list of fitting nouns and adjectives like "attending", "going to" and "rocking", "chill".
+\item Event tweets: The bot scraped the website of San Francisco Weekly and collected upcoming events like concerts, book readings, plays and tweeted about them in a fitting context randomly chosen from a list of fitting nouns and adjectives like "attending", "going to" and "rocking", "chill" and so on.
 \end{itemize}
 \subsection{Reciprocal Following}
 Once a day we followed new twitter users based on two principles:
@@ -78,10 +79,10 @@ Two cron jobs ensured that the bot did every Mondays, Wednesdays and Fridays plu
 The foundation of our analysis consists of two groups: the susceptible and non-susceptible twitter users. The susceptible users group consists of 488 users, 487 of which allowed us to see their information and tweets. The non-susceptible users group consists of 1186 users, 1183 of which allowed us to see their information and tweets.
 
 For performing analysis on tweets, 26 users from the non-susceptible group did not have any tweets, which shrunk the group down to 1160 when analysing tweets. Just one of the users in the susceptible group did not have any tweets, which gives us a group size of 487 tweets.
-We will analyze the following: Age of twitter account, number of followers, number of followed, number of tweets, average links of tweets, number of hashtags. We will also analyze the networks formed by the user groups as well as the sentiments made by the user groups.
+We will analyze the following: Age of twitter account, number of followers, number of followed, number of tweets, average links of tweets, number of hashtags, total favorite count for a subset of their tweets and total retweet count for a subset of their tweets. We will also analyze the networks formed by the groups as well as the sentiments made by the groups.
 
 \subsection{Statistics}
-This section contains statistics for each group with respect to: mean, median, standard deviation, upper quartile (75\% percentile) and lower quartile (25\% percentile).\\\\
+This section contains statistics for each group with respect to: mean, median, standard deviation,  lower quartile (25\% percentile) and upper quartile (75\% percentile).\\\\
 
 
 \begin{table}[H]
@@ -203,15 +204,15 @@ We see on boxplot (Figure \ref{fig:favorite_boxplot}) that there is a gross outl
 Non-susceptible & 318.712 & 206    & 312.943  & 60       &  524.25  \\
 Susceptible     & 314.652 & 196    & 301.290  & 66       &   543  
 \end{tabular}
-\caption{Statistics for total number of urls for latest tweets (up to a max of 1000)}
+\caption{Statistics for total number of links for latest tweets (up to a max of 1000)}
 \label{tab:urls}
 \end{table}
 
-The statistics for number of urls (Table \ref{tab:urls}) are very similar between the groups and not much can be concluded other than they most likely are not very different from one group to the other.
+The statistics for number of links (Table \ref{tab:urls}) are very similar between the groups and not much can be concluded other than they most likely are not very different from one group to the other.
 \begin{figure}[H]
   \centering
   \includegraphics[width=3.0in]{total_urls_boxplot}
-  \caption{Boxplot for metric: total urls}
+  \caption{Boxplot for metric: total links}
   \label{fig:total_urls_boxplot}
 \end{figure}
 The similarity is also expressed in the boxplot (Figure \ref{fig:total_urls_boxplot}).
@@ -247,7 +248,7 @@ Age & 1204.629 & 1456.636 & 6.290 & 4.952e-10\\
 Friends & 9638.393 & 10919.615 & -0.445 & 0.649 \\
 Followers & 13369.934 & 61028.298 & -1.107 & 0.268 \\
 Hashtags & 531.755 & 422.087 & -3.329 & 0.0009 \\
-Urls & 314.652 & 318.712 & 0.246 & 0.805 \\
+Links & 314.652 & 318.712 & 0.246 & 0.805 \\
 Statuses & 10627.834 & 11073.442 & -0.374 & 0.707 \\
 Retweeted tweets & 296314.418 & 211963.458 & -1.236 & 0.216 \\
 Favorited tweets & 856.482 & 2631.046 & 1.396 & 0.162 \\ \hline
@@ -258,7 +259,7 @@ Favorited tweets & 856.482 & 2631.046 & 1.396 & 0.162 \\ \hline
 Looking at the results of the t-test (Table \ref{tab:t_test}) we find that for the age of account and the number of hashtags, the null hypothesis can be rejected with our threshold, and thus the alternative hypothesis must be accepted that the means are significantly different from each other.\\
 
 \subsection{Machine-learning - supervised learning}
-We trained a Logistic Regression classifier on our data-set with the features specified in the Statistics section: age of account, number of friends, number of followers, number of total hashtags, number of total urls, number of total statuses, number of retweeted tweets and number of favorited tweets. We used 2-fold cross validation, and achieved a consistent accuracy of around 70\% for the classifier, which is the same accuracy percentage as predicting all outputs to be the largest class in our data-set (the non-susceptible class), thus for our data-set with our chosen number of features, it was not very effective.  
+We trained a Logistic Regression classifier on our data-set with the features specified in the Statistics section: age of account, number of friends, number of followers, number of total hashtags, number of total links, number of total statuses, number of retweeted tweets and number of favorited tweets. We used 2-fold cross validation, and achieved a consistent accuracy of around 70\% for the classifier, which is the same accuracy percentage as predicting all outputs to be the largest class in our data-set (the non-susceptible class), thus for our data-set with our chosen number of features, it was not very effective.  
 \subsection{Network}
 We wanted to see if there were a difference between the networks of the two groups. To do this, we would use following methods:\\
 \begin{itemize}
@@ -311,7 +312,7 @@ Average degree        & 2.127       & 2.061           \\ \hline
 \label{tab:networkKeyNumbers}
 \end{table}
 
-If we find the degree distribution for the groups, and plot them (Figure \ref{fig:degree_distribution}), we can that the are almost identically. 
+We find the degree distribution for the groups, and plot them (Figure \ref{fig:degree_distribution}), we find they are almost identically. 
 \begin{figure}[H]
   \centering
   \includegraphics[width=3.0in]{degree_distribution}
