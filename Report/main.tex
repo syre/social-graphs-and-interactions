@@ -78,21 +78,7 @@ Two cron jobs ensured that the bot did every Mondays, Wednesdays and Fridays plu
 The foundation of our analysis consists of two groups: the susceptible and non-susceptible twitter users. The susceptible users group consists of 488 users, 487 of which allowed us to see their information and tweets. The non-susceptible users group consists of 1186 users, 1183 of which allowed us to see their information and tweets.
 
 For performing analysis on tweets, 26 users from the non-susceptible group did not have any tweets, which shrunk the group down to 1160 when analysing tweets. Just one of the users in the susceptible group did not have any tweets, which gives us a group size of 487 tweets.
-We will analyze the following: Age of twitter account, number of followers, number of followed, number of tweets, average links of tweets, number of hashtags, tweets in comparison to retweets.
-\\
-NLP:
-sentiment analysis, one group more positive or negative?
-difference in readability measure
-\\
-Machine learning:
-Training a classifier with above attributes: (naive bayes, logistic regression, decision tree)
-\\
-Networks:
-In-out degree
-clustering coefficient
-average path length
-degree distribution
-which group follow the most high-profile users (100k followers or more).
+We will analyze the following: Age of twitter account, number of followers, number of followed, number of tweets, average links of tweets, number of hashtags. We will also analyze the networks formed by the user groups as well as the sentiments made by the user groups.
 
 \subsection{Statistics}
 This section contains statistics for each group with respect to: mean, median, standard deviation, upper quartile (75\% percentile) and lower quartile (25\% percentile).\\\\
@@ -128,7 +114,7 @@ Susceptible     & 13273.042 & 1062   & 72809.619   & 388     &   1919
 \label{tab:follower_count}
 \end{table}
 
-Looking at the follower count (Table \ref{tab:follower_count}), we see an incredibly high standard deviation and high means in comparison to medians for the follower count, this is usually the result of great outliers, that seems to be mostly in the non-susceptible group.
+Looking at the follower count (Table \ref{tab:follower_count}), we see a very high standard deviation and high means in comparison to medians for the follower count, this is usually the result of great outliers, that seems to be mostly in the non-susceptible group.
 \begin{figure}[H]
   \centering
   \includegraphics[width=3.0in]{follower_boxplot}
