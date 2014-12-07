@@ -26,7 +26,7 @@ This final project tries to look into what makes a human subsceptible to follow 
 \end{abstract}
 
 \section{Introduction}
-The purpose of DTU course 02805: Social Graph and Interactions is to make the students familiar with social networks and use network theory, natural language processing, datamining and machine learning to analyze these networks. All of the students were given the task of creating a Twitter bot with the purpose of "infiltrating" Twitter and gain followers. To gain followers the bot should try to imitate being a human user. As the followers and "Twitter presence" of the bot grew, it was used to try to influence the people of San Francisco through interventions. Interventions are created by letting all the bots tweet, retweet and favorite using a predetermined hashtag and in this way generate interactions from Twitter users. For the course, we created the bot JackBoHorseMan\cite{twitterprofile}, a 30-something male from Chicago, who loves animals, indie music, travelling and the Bulls.
+The purpose of DTU course 02805: Social Graph and Interactions is to make the students familiar with social networks and use network theory, natural language processing, datamining and machine learning to analyze these networks. All of the students were given the task of creating a Twitter bot with the purpose of "infiltrating" Twitter and gain followers. To gain followers the bot should try to imitate being a human user. As the followers and "Twitter presence" of the bot grew, it was used to try to influence the people of San Francisco through interventions. Interventions are created by letting all the bots tweet, retweet and favorite using a predetermined hashtag and in this way generate interactions from Twitter users. For the course, we created the bot JackBoHorseMan\cite{twitterprofile}, a 30-something male from Chicago (recently moved to San Fransisco), who loves animals, indie music, travelling and the Bulls.
 
 \section{Implementation}
 \subsection{Circadian Rhythm}
@@ -37,7 +37,7 @@ The implementations in the next subsections all operate only in the circadian rh
 The bot tweeted using two principles:
 \begin{itemize}
 \item Personal tweets: we created a list of predetermined tweets that the bot could select tweets from, communicating every-day situations as working late or waiting for the weekend or being tired on a monday that human users might relate or respond to.
-\item Event tweets: The bot scraped the website of San Francisco Weekly and collected upcoming events like concerts, book readings, plays and tweeted about them in a fitting context randomly chosen from a list of fitting nouns and adjectives like "attending", "going to" and "rocking", "chill".
+\item Event tweets: The bot scraped the website of San Francisco Weekly\cite{sfweekly} and collected upcoming events like concerts, book readings, plays and tweeted about them in a fitting context randomly chosen from a list of fitting nouns and adjectives like "attending", "going to" and "rocking", "chill".
 \end{itemize}
 \subsection{Reciprocal Following}
 Once a day we followed new twitter users based on two principles:
@@ -57,12 +57,12 @@ Once a day we retweeted content twice based on two different principles:
 The bot updated the Twitter profile every third day with a new profile banner based on a Google Image search, finding 50 on topics: horses, animals, indie, maldives, chicago bulls, san francisco monuments. This was done to make the bot appear more human as well as to pique the interest of potential followers.
 
 \section{Interventions}
-In the last part of the course, the whole class participated in "interventions" through their bots, Events where the bots collectively posted, retweeted and favorited content about a specific subject. These interventions hyped some predifined hashtags through two original tweets per day every Mondays, Wednesdays and Fridays plus at Thanksgiving. \\
+In the last part of the course, the whole class participated in "interventions" through their bots. Events where the bots collectively posted, retweeted and favorited content about a specific subject. These interventions hyped some predifined hashtags through two original tweets per day every Mondays, Wednesdays and Fridays plus Thanksgiving. \\
 Out strategy was to have the bot do it autonomously so we didn't have to intervene. \\
 
 We wrote all the original tweets and their hashtags in a semicolon seperated text-file where the specified date was the first element - then the two tweets. Our bot could then read the file, make a dictionary with the dates as keys and the two tweets as values. \\
 
-The window where the bot posted the two tweets was between 9am and 1pm San Francisco time. We add randomness to the time where the posts of the tweets would occur, by using random.sleep before both of the tweets.\\
+The window where the bot posted the two tweets was between 9am and 12pm next day San Francisco time (15 hours). We add randomness to the time where the posts of the tweets would occur, by using random.sleep before both of the tweets.\\
 Two cron jobs ensured that the bot did every Mondays, Wednesdays and Fridays plus thanksgiving.\\\\\\\\
 
 
@@ -412,6 +412,8 @@ For the bot as well as doing the analysis for this report we have relied on Pyth
 
 A conclusion can be drawn that creating a human-like bot that can gain a lot of followers and to some degree influence people is possible. The things we would've done differently and our advice to future bot designers is to follow users based on the criteria we found in this report, made users susceptible. The criteria we found for making users susceptible was: Following accounts with a low account age, high number of hashtags in tweets, and possibly: low number of favorited tweets, high friend count, high number of retweet tweets.\\\\
 
+By analysing the networks of the two 
+
 We would also advise creating and posting content early to picque potential subsceptible users interest, and utilizing website scraping for content generation, as we noticed it helped the bot generate more followers.
 
 \bibliographystyle{IEEEtran}
@@ -433,8 +435,11 @@ We would also advise creating and posting content early to picque potential subs
 \bibitem{betweenness}
 \url{http://en.wikipedia.org/wiki/Betweenness_centrality}
 \textit{Betweenness centrality - Wikipedia}
-\end{thebibliography}
 
+\bibitem{sfweekly}
+\url{http://www.sfweekly.com/}
+\textit{Sab Fransisco Weekly}
+\end{thebibliography}
 \clearpage
 \onecolumn
 \appendices
