@@ -13,7 +13,7 @@ import urllib
 import bs4
 import requests
 import numpy as np
-#import nltk.tokenize.punkt
+import nltk.tokenize.punkt
 import sklearn.naive_bayes
 import sklearn.linear_model
 
