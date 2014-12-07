@@ -270,7 +270,7 @@ We wanted to see if there were a difference between the networks of the two grou
 \end{itemize}
  There was multiple solutions to fetch the networks, depending on how we defined the network for a group. \\
 The first solutions was to fetch all (or a big amount) of each users followers in the group. This idea was quickly dropped do to the Twitter API rate limit. It would simply take forever. \\
-In the beginning we were concerned about the proportion which wasn't connected to others in the network. We knew we couldn't avoid this, but maybe we could minimize it. Therefore, the second solution was to find all of the users in first indent (of the group) where minimum one of the users followed the other. This could minimize the non-connected nodes. In the other hand, we could see we manipulated the data which was a no go. \\
+In the beginning we were concerned about the proportion which wasn't connected to others in the network. We knew we couldn't avoid this, but maybe we could minimize it. Therefore, the second solution was to find all of the users in first indent (of the group) where minimum one of the users followed the other. This could minimize the non-connected nodes. On the other hand, this might produce skewed results which is not acceptable. \\
 The final solution which we ended up with, was to take 30 of the users in each group randomly chosen as well as 100 of their followers and constructing a network graph from that data. \\
 
 As we still ended up with a network not entirely connected, we couldn't calculate the average shortest path and clustering coefficient as it was. But we found a solution to this: Giant component. \\
