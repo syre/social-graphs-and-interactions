@@ -77,7 +77,7 @@ Two cron jobs ensured that the bot did every Mondays, Wednesdays and Fridays plu
 \subsection{User groups}
 The foundation of our analysis consists of two groups: the susceptible and non-susceptible twitter users. The susceptible users group consists of 488 users, 487 of which allowed us to see their information and tweets. The non-susceptible users group consists of 1186 users, 1183 of which allowed us to see their information and tweets.
 
-For performing analysis on tweets, 26 users from the non-susceptible group did not have any tweets, which shrunk the group down to 1160 when analysing tweets. Just one of the users in the susceptible group dit not have any tweets, which gives us a group size of 487 tweets.
+For performing analysis on tweets, 26 users from the non-susceptible group did not have any tweets, which shrunk the group down to 1160 when analysing tweets. Just one of the users in the susceptible group did not have any tweets, which gives us a group size of 487 tweets.
 We will analyze the following: Age of twitter account, number of followers, number of followed, number of tweets, average links of tweets, number of hashtags, tweets in comparison to retweets.
 \\
 NLP:
@@ -97,6 +97,7 @@ which group follow the most high-profile users (100k followers or more).
 \subsection{Statistics}
 This section contains statistics for each group with respect to: mean, median, standard deviation, upper quartile (75\% percentile) and lower quartile (25\% percentile).\\\\
 
+
 \begin{table}[h!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean     & Median & Std. Dev & Lower Q. & Upper Q. \\
@@ -105,8 +106,18 @@ Susceptible     & 1204.547 & 1190   & 750.312  &  500    &   1919
 \end{tabular}
 \caption{Statistics for age of account}
 \end{table}
+
 For the age of account metric, we see a difference in the means and medians for the two groups with account age for the susceptible group being slightly lower, we see a similarity in standard deviation and upper percentile, with the susceptible group having a low lower quartile.
-\begin{table}[h]
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{age_of_account_boxplot}
+  \caption{Boxplot for metric: age of account}
+  \label{fig:age_boxplot}
+\end{figure}
+This is confirmed on the boxplot.\\\\
+\begin{table}[h!]
+
 \begin{tabular}{llllll}
 \textbf{}       & Mean      & Median & Std. Dev    & Lower Q. & Upper Q. \\
 Non-susceptible & 61266.122 & 1095   & 1478798.298 & 303.5    &  6013    \\
@@ -115,25 +126,50 @@ Susceptible     & 13273.042 & 1062   & 72809.619   & 388     &   1919
 \caption{Statistics for follower count}
 \end{table}
 
-\begin{table}[h]
+Looking at the table for follower count, we see an incredibly high standard deviation and high means in comparison to medians, this is usually the result of great outliers, that seems to be mostly in the non-susceptible group.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{follower_boxplot}
+  \caption{Boxplot for metric: follower count}
+  \label{fig:follower_boxplot}
+\end{figure}
+We see this is confirmed by looking at the boxplot where both groups have large outliers.\\\\
+\begin{table}[ht!]
+
+
 \begin{tabular}{llllll}
 \textbf{}       & Mean      & Median & Std. Dev  & Lower Q. & Upper Q. \\
 Non-susceptible & 11109.594 & 2527   & 23591.433 &  604  & 10298.5     \\
-Susceptible     & 10574.918 & 2796   & 21419.868 & 709    &   3530    
+Susceptible     & 10574.918 & 2796   & 21419.868 & 709    &   10904    
 \end{tabular}
 \caption{Statistics for statuses count}
 \end{table}
-
-\begin{table}[h!]
+For the statuses count we see largely similar values across the board, and a high standard deviation which indicate outliers in both groups.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{statuses_count_boxplot}
+  \caption{Boxplot for metric: statuses count}
+  \label{fig:statuses_boxplot}
+\end{figure}
+This is confirmed by the boxplot where each group have outliers but seems similar.\\\\
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean      & Median & Std. Dev  & Lower Q. & Upper Q. \\
 Non-susceptible & 9653.624  & 1138   & 41365.673 & 431     &  3092     \\
-Susceptible     & 10852.841 & 1389   & 56008.349 & 592    &   10904   
+Susceptible     & 10852.841 & 1389   & 56008.349 & 592    &   3000   
 \end{tabular}
 \caption{Statistics for friends count}
 \end{table}
 
-\begin{table}[h]
+For the friends count metric they have somewhat similar values with the susceptible having a bit higher median, mean and lower quartile, with a high standard deviation indicating outliers.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{friends_boxplot}
+  \caption{Boxplot for metric: friends count}
+  \label{fig:friends_boxplot}
+\end{figure}
+By looking at the boxplot we see huge outliers in friends count as well, with the median for the susceptible group being a little higher than for the non-susceptible group.\\\\
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean    & Median & Std. Dev & Lower Q. & Upper Q. \\
 Non-susceptible & 422.103 & 239    & 644.575  & 71     & 546        \\
@@ -142,16 +178,34 @@ Susceptible     & 531.790 & 337    & 594.212  & 120    &  745.5
 \caption{Statistics for total hashtags for latest 1000 tweets}
 \end{table}
 
-\begin{table}[h]
+The total hashtags metric shows somewhat similar values as well with a bit higher median and mean as well as upper quantile for the susceptible group. Standard deviations for the two groups are somewhat high however.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{total_hashtags_boxplot}
+  \caption{Boxplot for metric: total hashtags}
+  \label{fig:hashtags_boxplot}
+\end{figure}
+This is confirmed on the boxplot.\\\\
+
+\begin{table}[ht!]
 \begin{tabular}{llllll}
 \textbf{}       & Mean     & Median & Std. Dev  & Lower Q. & Upper Q. \\
 Non-susceptible & 2631.046 & 140.5  & 42591.170 & 35.75  & 447.75     \\
 Susceptible     & 856.482  & 112    & 4899.689  & 32.5     &  275    
 \end{tabular}
-\caption{Statistics for total number of incoming favorited tweets for latest tweets (up to a max of 1000)}
+\caption{Statistics for total number of incoming favorited (favorite count) tweets for latest tweets (up to a max of 1000)}
 \end{table}
 
-\begin{table}[h]
+The statistics for number of favorited tweets show a larger mean, median and upper quantile for the non-susceptible group. However the standard deviation is also an order of magnitude higher for the non-susceptible group, so this could indicate one or more outliers, especially in the non-susceptible group.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{favorite_boxplot}
+  \caption{Boxplot for metric: number of favorites}
+  \label{fig:favorite_boxplot}
+\end{figure}
+We see on the boxplot that there is a gross outlier for the non-susceptible users.\\\\
+\begin{table}[ht!]
+
 \begin{tabular}{llllll}
 \textbf{}       & Mean    & Median & Std. Dev & Lower Q. & Upper Q. \\
 Non-susceptible & 318.712 & 206    & 312.943  & 60       &  524.25  \\
@@ -160,17 +214,35 @@ Susceptible     & 314.652 & 196    & 301.290  & 66       &   543
 \caption{Statistics for total number of urls for latest tweets (up to a max of 1000)}
 \end{table}
 
-\begin{table}[h]
+The statistics for number of urls are very similar and not much can be concluded other than they most likely are not very different from one group to the other.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{total_urls_boxplot}
+  \caption{Boxplot for metric: total urls}
+  \label{fig:total_urls_boxplot}
+\end{figure}
+The similarity is also expressed in the boxplot.
+\begin{table}[ht!]
+
 \begin{tabular}{llllll}
 \textbf{}       & Mean       & Median  & Std. Dev    & Lower Q. & Upper Q. \\
 Non-susceptible & 211963.458 & 14833.5 & 794069.88   & 1794.25    & 94021  \\
 Susceptible     & 296314.418 & 25401   & 1412893.447 & 3261.5   &  118909 
 \end{tabular}
-\caption{Statistics for total number of retweets for latest tweets (up to a max of 1000)}
+\caption{Statistics for total number of incoming retweets (retweet count) on latest tweets (up to a max of 1000)}
 \end{table}
+The mean and median are higher for the susceptible group, but both groups have large standard deviations, where the deviation for the susceptible group is especially large, which indicates outliers in both groups, especially for the susceptible group.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=3.0in]{retweets_boxplot}
+  \caption{Boxplot for metric: retweets}
+  \label{fig:retweets_boxplot}
+\end{figure}
+The boxplot reveals outliers especially among the susceptible users.
+\\\\
 
 In comparing the data between the two groups, we will use a Welch t-test for testing populations with unequal variances to test the null hypothesis that they have equal means or the alternative hypothesis that there is a difference in means of the two groups.
-
+We choose a treshold of 5\% (0.05).
 \begin{table}[H]
 \centering
 \begin{tabular}{lllll}
@@ -187,9 +259,9 @@ Favorited tweets & 856.482 & 2631.046 & 1.396 & 0.162 \\ \hline
 \end{tabular}
 \caption{The table above shows the mean of each metric for the susceptible users and non-susceptible users. The hashtags metric are hashtags used for a maximum of 1000 tweets. The retweeted tweets metric are the total number of times the users tweets have been retweeted for a maximum of 1000 tweets. The favorited tweets metric are the total number of times the users tweets have been favorited for a maximum of 1000 tweets. The age of account is specified in days.}
 \end{table}
-We choose a treshold of 5\% (0.05).
-We find that for the age of account and the number of hashtags, the null hypothesis can be rejected with our threshold, and thus the alternative hypothesis must be accepted that the means are significantly different from each other.
-\subsection{Machine-learning - training a classifier}
+We find that for the age of account and the number of hashtags, the null hypothesis can be rejected with our threshold, and thus the alternative hypothesis must be accepted that the means are significantly different from each other.\\
+
+\subsection{Machine-learning - supervised learning}
 We trained a Logistic Regression classifier on our data-set with the features specified in the Statistics section: age of account, number of friends, number of followers, number of total hashtags, number of total urls, number of total statuses, number of retweeted tweets and number of favorited tweets. The classifier achieved a consistent accuracy of around 70\% which is the same accuracy percentage as predicting all outputs to be the largest class in our data-set (the non-susceptible class), thus for our data-set with our chosen number of features, it was not very effective.  
 \subsection{Network}
 We wanted to see if there were a difference between the networks of the two groups. To do this, we would use following methods:\\
@@ -339,10 +411,12 @@ In network theory have we used average shortest path length, average degree and 
 We have used NLP to find the sentiment of the users tweets, so we could tell if the user generally writes positive or negative.\\
 We used an self-made corpus and som machine learning tools. \\
 \subsubsection{Python and relevant libraries}
-For the bot as well as doing the analysis for this report we have relied on Python, its standard library and the external libraries: twitter, nltk, sklearn, requests, beautiful soup, numpy, pymongo.
+For the bot as well as doing the analysis for this report we have relied on Python, its standard library and the external libraries: twitter, nltk, sklearn, requests, beautiful soup, numpy, pymongo, networkx.
 \section{Conclusion}
 
+A conclusion can be drawn that creating a human-like bot that can gain a lot of followers and to some degree influence people is possible. The things we would've done differently and our advice to future bot designers is to follow users based on the criteria we found in this report, made users susceptible. The criteria we found for making users susceptible was: Following accounts with a low account age, high number of hashtags in tweets, and possibly: low number of favorited tweets, high friend count, high number of retweet tweets.\\\\
 
+We would also advise creating and posting content early to picque potential subsceptible users interest, and utilizing website scraping for content generation, as we noticed it helped the bot generate more followers.
 
 \bibliographystyle{IEEEtran}
 \bibliography{lyngby}
